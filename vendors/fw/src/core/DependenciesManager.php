@@ -23,19 +23,19 @@ class DependenciesManager {
 	public function register($class) {
 		$reflection = new \ReflectionClass($class);
 
-		$dependecies = [];
+		$dependencies = [];
 		$interfaces = array_merge($reflection->getInterfaceNames(), [$reflection->getName()]);
 		$constructor = $reflection->getConstructor();
 
 		if ($constructor) {
 			foreach ($constructor->getParameters() as $parameter) {
-				$dependendy = [
+				$dependency = [
 					'name' => $parameter->getName(),
 					'type' => $parameter->hasType() ? $parameter->getType()->__toString() : null,
 					'position' => $parameter->getPosition()
 				];
 
-				$dependecies[] = (object) $dependendy;
+				$dependencies[] = (object) $dependency;
 			}
 		}
 
@@ -43,14 +43,14 @@ class DependenciesManager {
 			$instance = [
 				'name' => $reflection->getName(),
 				'instance' => null,
-				'dependecies' => $dependecies
+				'dependencies' => $dependencies
 			];
 
 			$this->instances[$interface][] = (object) $instance;
 		}
 	}
 
-	public function make() {
+	public function resolve($class) {
 
 	}
 

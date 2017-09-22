@@ -62,6 +62,18 @@ class Autoloader {
 		}
 
 		foreach ($this->prefixes[$prefix] as $baseDir) {
+			$relativeClass = explode('\\', $relativeClass);
+
+			if (count($relativeClass) > 1) {
+				foreach ($relativeClass as $i => $item) {
+					if ($i < count($relativeClass) - 1) {
+						$relativeClass[$i] = strtolower($item);
+					}
+				}
+			}
+
+			$relativeClass = implode('\\', $relativeClass);
+
 			$file = str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $baseDir . $relativeClass) . '.php';
 
 			if ($this->requireFile($file)) {

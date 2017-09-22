@@ -6,8 +6,9 @@ use \FW\MVC\Controller;
 use \App\Interfaces\IHomeService;
 
 /**
- * Route home
- * Inject ???
+ * @Controller
+ * @Route /
+ * @Inject ???
  */
 class HomeController extends Controller {
 
@@ -15,6 +16,9 @@ class HomeController extends Controller {
 		parent::__construct();
 	}
 
+	/**
+	 * @RequestMap /
+	 */
 	public function index() {
 		return 'Home page!';
 	}

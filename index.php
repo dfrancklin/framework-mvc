@@ -1,4 +1,5 @@
 <?php
+
 header('refresh:2');
 
 function vd(...$vs) {
@@ -28,11 +29,15 @@ $fw->lookThrough(
 
 $fw->run();
 
-foreach ($fw->dm->instances as $interface => $instance) {
+foreach ($fw->dm->instances as $interface => $instances) {
 	vd($interface);
 
-	foreach ($fw->dm->instances[$interface] as $instance) {
+	foreach ($instances as $instance) {
 		vd($instance);
+
+		foreach ($instance['dependencies'] as $dependency) {
+			vd($dependency);
+		}
 	}
 
 	pr('---------------------------------------------------------------------------');

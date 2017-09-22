@@ -37,6 +37,10 @@ class FW {
 	}
 
 	public function lookUp($folder, $recursive = false) {
+		if (!$folder) {
+			throw new \Exception('A folder needs to be informed');
+		}
+
 		foreach (glob($folder . DIRECTORY_SEPARATOR . '*') as $entry) {
 			if (is_dir($entry) && $recursive) {
 				$this->lookUp($folder);
@@ -47,23 +51,13 @@ class FW {
 	}
 
 	public function run() {
-		list($ctrl, $action, $params) = $this->breakURL();
-
-		$ctrl = ucfirst($ctrl) . 'Controller';
-		$ctrl = $this->dm->make($ctrl);
-
-		vd($ctrl);
-	}
-
-	private function breakURL() {
 		if (!isset($_SERVER['PATH_INFO'])) {
-			return ['home', 'index', null];
+			$controller = $this->router->resolve('/');
+		} else {
+			$controller = $this->router->resolve($_SERVER['PATH_INFO']);
 		}
 
-		$path = explode('/', substr($_SERVER['PATH_INFO'], 1));
-		list($ctrl, $action) = $path;
-
-		return [$ctrl, $action, array_slice($path, 2)];
+		$controller = $this->dm->resolve($controller);
 	}
 
 	private function resolveEntry($entry) {
@@ -80,9 +74,11 @@ class FW {
 
 			if (preg_match('/namespace\s([^;]+)/i', trim($line), $matches)) {
 				$namespace = $matches[1];
-			} else if (preg_match('/class\s([^\s]+)/i', trim($line), $matches)) {
+			} else if (preg_match('/class\s([^\s]+)/i', trim($line), $matches) && $namespace) {
 				$className = $matches[1];
 			}
+
+			$isController = preg_match('/@Controller$/i', trim($line), $matches) && $namespace;
 		}
 
 		fclose($handler);
@@ -94,6 +90,10 @@ class FW {
 		$fullName = $namespace . '\\' . $className;
 
 		$this->dm->register($fullName);
+
+		if($isController) {
+			$this->router->register($fullName);
+		}
 	}
 
 }

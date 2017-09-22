@@ -23,7 +23,17 @@ class Router {
 	public function register($class) {
 		$reflection = new \ReflectionClass($class);
 
-		$reflection->getDocComment();
+		vd($reflection->getDocComment());
+
+		foreach($reflection->getMethods() as $method) {
+			if (!$method->isConstructor() && $method->isPublic()) {
+				vd($method->getDocComment());
+			}
+		}
+	}
+
+	public function resolve($route) {
+
 	}
 
 }
