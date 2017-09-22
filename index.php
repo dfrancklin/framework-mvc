@@ -29,16 +29,16 @@ $fw->lookThrough(
 
 $fw->run();
 
-foreach ($fw->dm->instances as $interface => $instances) {
-	vd($interface);
+// foreach ($fw->dm->instances as $interface => $instances) {
+// 	vd($interface);
 
-	foreach ($instances as $instance) {
-		vd($instance);
+// 	foreach ($instances as $instance) {
+// 		vd($instance);
 
-		foreach ($instance['dependencies'] as $dependency) {
-			vd($dependency);
-		}
-	}
+// 		foreach ($instance['dependencies'] as $dependency) {
+// 			vd($dependency);
+// 		}
+// 	}
 
-	pr('---------------------------------------------------------------------------');
-}
+// 	pr('---------------------------------------------------------------------------');
+// }
