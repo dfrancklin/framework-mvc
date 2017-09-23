@@ -68,6 +68,7 @@ class FW {
 		}
 
 		$namespace = $className = null;
+		$isController = false;
 
 		while (!feof($handler) && !($namespace && $className)) {
 			$line = fgets($handler);
@@ -78,7 +79,9 @@ class FW {
 				$className = $matches[1];
 			}
 
-			$isController = preg_match('/@Controller$/i', trim($line), $matches) && $namespace;
+			if (preg_match('/@Controller$/i', trim($line), $matches) && $namespace) {
+				$isController = true;
+			}
 		}
 
 		fclose($handler);

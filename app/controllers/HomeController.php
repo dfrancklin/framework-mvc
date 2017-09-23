@@ -19,8 +19,24 @@ class HomeController extends Controller {
 	/**
 	 * @RequestMap /
 	 */
-	public function index() {
+	 public function index() {
 		return 'Home page!';
+	}
+
+	/**
+	 * @RequestMap products
+	 * @RequestMethod [GET, PUT, POST, PATCH]
+	 */
+	public function products() {
+		return 'Products page!';
+	}
+
+	/**
+	 * @RequestMap save
+	 * @RequestMethod POST
+	 */
+	public function save() {
+		return 'Products page!';
 	}
 
 }
