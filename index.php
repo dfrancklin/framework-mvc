@@ -2,9 +2,9 @@
 
 header('refresh:2');
 
-function vd(...$vs) {
+function vd(...$v) {
 	echo '<pre style="white-space: pre-wrap; word-break: break-all;">';
-	foreach ($vs as $v) var_dump($v);
+	var_dump(...$v);
 	echo '</pre>';
 }
 

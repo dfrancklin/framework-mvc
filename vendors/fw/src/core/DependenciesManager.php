@@ -29,10 +29,26 @@ class DependenciesManager {
 
 		if ($constructor) {
 			foreach ($constructor->getParameters() as $parameter) {
+				$type = $defaultValue = null;
+
+				if ($parameter->hasType()) {
+					$type = (object) [
+						'name' => $parameter->getType()->__toString(),
+						'injectable' => !$parameter->getType()->isBuiltIn() && !$parameter->isArray()
+					];
+				}
+
+				if (!$parameter->isDefaultValueAvailable() && ($type && !$type->injectable)) {
+					throw new \Exception('The parameter "' . $parameter->getName() . '" of the constructor of the class "' . $class . '" must have a default value');
+				} elseif($parameter->isDefaultValueAvailable()) {
+					$defaultValue = $parameter->getDefaultValue();
+				}
+
 				$dependency = [
+					'position' => $parameter->getPosition(),
 					'name' => $parameter->getName(),
-					'type' => $parameter->hasType() ? $parameter->getType()->__toString() : null,
-					'position' => $parameter->getPosition()
+					'defaultValue' => $defaultValue,
+					'type' => $type,
 				];
 
 				$dependencies[] = (object) $dependency;
@@ -46,12 +62,40 @@ class DependenciesManager {
 				'dependencies' => $dependencies
 			];
 
-			$this->instances[$interface][] = (object) $instance;
+			if (array_key_exists($interface, $this->instances)) {
+				throw new \Exception('An instance for the interface "' . $interface . '" already exists');
+			}
+
+			$this->instances[$interface] = (object) $instance;
 		}
 	}
 
 	public function resolve($class) {
+		if (!array_key_exists($class, $this->instances)) {
+			throw new \Exception('An instance for "' . $class . '" was not founded');
+		}
 
+		$map = $this->instances[$class];
+
+		if (!is_null($map->instance)) {
+			return $map->instace;
+		}
+
+		$dependencies = [];
+
+		foreach ($map->dependencies as $dependency) {
+			if ($dependency->type && $dependency->type->injectable) {
+				$dependencies[$dependency->position] = $this->resolve($dependency->type->name);
+			} else {
+				$dependencies[$dependency->position] = $dependency->defaultValue;
+			}
+		}
+
+		$instance = new $map->name(...$dependencies);
+
+		$this->instances[$class]->instance = $instance;
+
+		return $instance;
 	}
 
 }
