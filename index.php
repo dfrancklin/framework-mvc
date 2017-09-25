@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 header('refresh:2');
 
 function vd(...$v) {
@@ -28,17 +31,3 @@ $fw->lookThrough(
 	__DIR__ . '/app/repositories');
 
 $fw->run();
-
-// foreach ($fw->dm->instances as $interface => $instances) {
-// 	vd($interface);
-
-// 	foreach ($instances as $instance) {
-// 		vd($instance);
-
-// 		foreach ($instance['dependencies'] as $dependency) {
-// 			vd($dependency);
-// 		}
-// 	}
-
-// 	pr('---------------------------------------------------------------------------');
-// }

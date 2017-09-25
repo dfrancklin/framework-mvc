@@ -56,11 +56,21 @@ class Router {
 					return $parameter->getName();
 				}, $method->getParameters());
 
-				if (array_key_exists($route, $this->routes)) {
-					throw new \Exception('The route "' . $route . '" already exists');
+				if (array_key_exists($route, $this->routes) && $this->existsRoutesMethods($this->routes[$route], $requestMethods)) {
+					vd([
+						'class' => $class,
+						'method' => $method->getName(),
+						'parameters' => $parameters,
+						'requestMethods' => $requestMethods,
+						'pattern' => $route,
+					]);
+					
+					vd($this->routes[$route]);
+					
+					throw new \Exception('The route "' . $route . '" already exists with the following HTTP Methods "[' . implode(', ', $requestMethods) . ']"');
 				}
 
-				$this->routes[$route] = (object) [
+				$this->routes[$route][] = (object) [
 					'class' => $class,
 					'method' => $method->getName(),
 					'parameters' => $parameters,
@@ -106,9 +116,21 @@ class Router {
 			}
 		}
 	}
+	
+	private function existsRoutesMethods($routes, $requestMethods) {
+		foreach($routes as $route) {
+			foreach ($requestMethods as $method) {
+				if (in_array($method, $route->requestMethods)) {
+					return true;
+				}
+			}
+		}
+	
+		return false;
+	}
 
 	public function handle($route, $requestMethod) {
-		$map = $this->findRoute($route);
+		$map = $this->findRoute($route, $requestMethod);
 
 		if (!in_array($requestMethod, $map->requestMethods)) {
 			throw new \Exception('HTTP Method "' . $requestMethod . '" not allowed on route "' . $route . '"');
@@ -117,21 +139,27 @@ class Router {
 		$controller = $this->dm->resolve($map->class);
 		preg_match($map->pattern, $route, $matches);
 		array_shift($matches);
-
+		
 		$view = $controller->{$map->method}(...$matches);
 		vd($view);
 	}
 
-	private function findRoute($route) {
+	private function findRoute($route, $requestMethod) {
 		$routes = array_filter($this->routes, function($pattern) use ($route) {
 			return preg_match($pattern, $route);
 		}, ARRAY_FILTER_USE_KEY);
+		
+		$routes = array_map(function ($route) use ($requestMethod) {
+			if (in_array($requestMethod, $route->requestMethods)) {
+				return $route;
+			}
+		}, ...array_values($routes));
 
 		if (!count($routes)) {
 			throw new \Exception('Route "' . $route . '" not found');
 		}
-
-		return array_values($routes)[0];
+		
+		return $routes[0];
 	}
 
 }

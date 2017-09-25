@@ -51,10 +51,10 @@ class FW {
 	}
 
 	public function run() {
-		if (!isset($_SERVER['PATH_INFO'])) {
+		if (!isset($_SERVER['PATH_INFO']) && !isset($_SERVER['REDIRECT_URL'])) {
 			$controller = $this->router->handle('/', $_SERVER['REQUEST_METHOD']);
 		} else {
-			$controller = $this->router->handle($_SERVER['PATH_INFO'], $_SERVER['REQUEST_METHOD']);
+			$controller = $this->router->handle($_SERVER['PATH_INFO'] ?? $_SERVER['REDIRECT_URL'], $_SERVER['REQUEST_METHOD']);
 		}
 	}
 
