@@ -29,53 +29,57 @@ class Router {
 	public function register($class) {
 		$reflection = new \ReflectionClass($class);
 
+		$root = '/';
+		$allRequiresAuth = false;
+		$roles = [];
+
 		if (preg_match('/@Route\s([^\n]+)/i', $reflection->getDocComment(), $matches)) {
 			$root = trim($matches[1]);
-		} else {
-			throw new \Exception('A route must be specified on the controller "' . $class . '"');
 		}
 
 		if (strlen($root) && $root[0] !== '/') {
 			$root = '/' . $root;
 		}
 
+		if (preg_match('/@Authenticate/i', $reflection->getDocComment())) {
+			$allRequiresAuth = true;
+		}
+
+		if (preg_match("/@Roles\s([^" . PHP_EOL . "]+)/i", $reflection->getDocComment(), $matches)) {
+			$roles = trim($matches[1], "[]");
+			$roles = preg_split("/(,\s?)/i", $roles);
+			$roles = array_filter($roles);
+		}
+
 		foreach($reflection->getMethods() as $method) {
 			if (!$method->isConstructor() && $method->isPublic()) {
-				list($path, $requestMethods) = $this->resolveMethod($method);
+				$map = $this->resolveMethod($method);
 
 				$route = $root;
 
-				if (strlen($path) && $path[0] !== '/') {
+				if (strlen($map->path) && $map->path[0] !== '/') {
 					$route .= '/';
 				}
 
-				$route .= $path;
+				$route .= $map->path;
 				$route = '/^' . preg_replace(['/[\/\/]+/i', '/\//i', '/{(.*?)}/i'], ['/', '\/', '([^\/]+)'], $route) . '\/?$/i';
 
 				$parameters = array_map(function($parameter) {
 					return $parameter->getName();
 				}, $method->getParameters());
 
-				if (array_key_exists($route, $this->routes) && $this->existsRoutesMethods($this->routes[$route], $requestMethods)) {
-					vd([
-						'class' => $class,
-						'method' => $method->getName(),
-						'parameters' => $parameters,
-						'requestMethods' => $requestMethods,
-						'pattern' => $route,
-					]);
-
-					vd($this->routes[$route]);
-
-					throw new \Exception('The route "' . $route . '" already exists with the following HTTP Methods "[' . implode(', ', $requestMethods) . ']"');
+				if (array_key_exists($route, $this->routes) && $this->existsRoutesMethods($this->routes[$route], $map->requestMethods)) {
+					throw new \Exception('The route "' . $route . '" already exists with the following HTTP Methods "[' . implode(', ', $map->requestMethods) . ']"');
 				}
 
 				$this->routes[$route][] = (object) [
 					'class' => $class,
 					'method' => $method->getName(),
 					'parameters' => $parameters,
-					'requestMethods' => $requestMethods,
+					'requestMethods' => $map->requestMethods,
 					'pattern' => $route,
+					'requiresAuthentication' => $allRequiresAuth ? true : $map->requiresAuthentication,
+					'roles' => count($roles) ? $roles : $map->roles,
 				];
 			}
 		}
@@ -84,6 +88,8 @@ class Router {
 	private function resolveMethod($method) {
 		$path = '';
 		$methods = ['GET'];
+		$requiresAuthentication = false;
+		$roles = [];
 
 		if (preg_match("/@RequestMap\s([^" . PHP_EOL . "]+)/i", $method->getDocComment(), $matches)) {
 			$path = trim($matches[1]);
@@ -106,7 +112,22 @@ class Router {
 			}
 		}
 
-		return [$path, $methods];
+		if (preg_match('/@Authenticate/i', $method->getDocComment())) {
+			$requiresAuthentication = true;
+		}
+
+		if (preg_match("/@Roles\s([^" . PHP_EOL . "]+)/i", $method->getDocComment(), $matches)) {
+			$roles = trim($matches[1], "[]");
+			$roles = preg_split("/(,\s?)/i", $roles);
+			$roles = array_filter($roles);
+		}
+
+		return (object) [
+			'path' => $path, 
+			'requestMethods' => $methods,
+			'requiresAuthentication' => $requiresAuthentication,
+			'roles' => $roles,
+		];
 	}
 
 	private function validateMethods(array $methods) {
@@ -146,13 +167,15 @@ class Router {
 	private function findRoute($route, $requestMethod) {
 		$routes = array_filter($this->routes, function($pattern) use ($route) {
 			return preg_match($pattern, $route);
-		}, ARRAY_FILTER_USE_KEY);
-
-		$routes = array_map(function ($route) use ($requestMethod) {
-			if (in_array($requestMethod, $route->requestMethods)) {
-				return $route;
-			}
-		}, ...array_values($routes));
+		}, ARRAY_FILTER_USE_KEY); 
+		
+		if (count($routes)) {
+			$routes = array_map(function ($route) use ($requestMethod) {
+				if (in_array($requestMethod, $route->requestMethods)) {
+					return $route;
+				}
+			}, ...array_values($routes));
+		}
 
 		if (!count($routes)) {
 			throw new \Exception('Route "' . $route . '" not found');

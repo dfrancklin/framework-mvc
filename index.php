@@ -29,7 +29,7 @@ $fw->lookThrough(
 	__DIR__ . '/app/controllers',
 	__DIR__ . '/app/services',
 	__DIR__ . '/app/repositories');
-$fw->setStatics(__DIR__ . '/app/static');
+
 $fw->setViews(__DIR__ . '/app/views');
 
 $fw->run();

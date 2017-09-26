@@ -10,6 +10,7 @@ use \App\Interfaces\IHomeService;
  * @Controller
  * @Route /
  * @Authenticate
+ * @Roles [ADMIN,USER]
  */
 class HomeController extends Controller {
 
@@ -28,6 +29,7 @@ class HomeController extends Controller {
 	/**
 	 * @RequestMap products
 	 * @RequestMethod [GET, PUT, POST, PATCH]
+	 * @Roles [ADMIN]
 	 */
 	public function products() {
 		return 'Products page!';

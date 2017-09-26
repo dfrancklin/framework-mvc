@@ -13,16 +13,17 @@ class FW {
 
 	public $router;
 
-	private $statics;
-
 	private $views;
 
 	private $template;
+	
+	private $components;
 
 	protected function __construct() {
 		$this->dm = DependenciesManager::getInstance();
 		$this->router = Router::getInstance();
 		$this->template = 'template';
+		$this->components = ['Controller', 'Service', 'Repository'];
 	}
 
 	public static function getInstance() : self {
@@ -73,25 +74,27 @@ class FW {
 		}
 
 		$namespace = $className = null;
-		$isController = false;
+		$isComponent = $isController = false;
 
-		while (!feof($handler) && !($namespace && $className)) {
+		while (!feof($handler) && !($className && $isComponent)) {
 			$line = fgets($handler);
 
 			if (preg_match('/namespace\s([^;]+)/i', trim($line), $matches)) {
 				$namespace = $matches[1];
-			} else if (preg_match('/class\s([^\s]+)/i', trim($line), $matches) && $namespace) {
+			} elseif (preg_match('/class\s([^\s]+)/i', trim($line), $matches)) {
 				$className = $matches[1];
-			}
-
-			if (preg_match('/@Controller$/i', trim($line), $matches) && $namespace) {
-				$isController = true;
+			} elseif (preg_match('/@(' . implode('|', $this->components) . ')/i', trim($line), $matches)) {
+				$isComponent = true;
+				
+				if ($matches[0] === '@Controller') {
+					$isController = true;
+				}
 			}
 		}
 
 		fclose($handler);
 
-		if (!$namespace || !$className) {
+		if (!$isComponent || !$className) {
 			return;
 		}
 
@@ -102,22 +105,6 @@ class FW {
 		if($isController) {
 			$this->router->register($fullName);
 		}
-	}
-
-	public function setStatics($folder) {
-		if (!file_exists($folder)) {
-			throw new \Exception('Folder "' . $folder . '" does not exists!');
-		}
-
-		$this->statics = $folder;
-	}
-
-	public function getStatics() {
-		if (!$this->statics) {
-			throw new \Exception('No folder for static files was specified!');
-		}
-
-		return $this->statics;
 	}
 
 	public function setViews($folder) {

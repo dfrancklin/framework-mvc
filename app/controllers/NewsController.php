@@ -7,7 +7,6 @@ use \FW\MVC\View;
 /**
  * @Controller
  * @Route /news
- * @Authenticate
  */
 class NewsController {
 
@@ -45,6 +44,8 @@ class NewsController {
 
 	/**
 	 * @RequestMethod POST
+	 * @Authenticate
+	 * @Roles [ADMIN]
 	 */
 	public function save() {
 		return 'Saving news!';
