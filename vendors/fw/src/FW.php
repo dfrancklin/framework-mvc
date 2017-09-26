@@ -13,9 +13,16 @@ class FW {
 
 	public $router;
 
+	private $statics;
+
+	private $views;
+
+	private $template;
+
 	protected function __construct() {
 		$this->dm = DependenciesManager::getInstance();
 		$this->router = Router::getInstance();
+		$this->template = 'template';
 	}
 
 	public static function getInstance() : self {
@@ -95,6 +102,56 @@ class FW {
 		if($isController) {
 			$this->router->register($fullName);
 		}
+	}
+
+	public function setStatics($folder) {
+		if (!file_exists($folder)) {
+			throw new \Exception('Folder "' . $folder . '" does not exists!');
+		}
+
+		$this->statics = $folder;
+	}
+
+	public function getStatics() {
+		if (!$this->statics) {
+			throw new \Exception('No folder for static files was specified!');
+		}
+
+		return $this->statics;
+	}
+
+	public function setViews($folder) {
+		if (!file_exists($folder)) {
+			throw new \Exception('Folder "' . $folder . '" does not exists!');
+		}
+
+		$this->views = $folder;
+	}
+
+	public function getViews() {
+		if (!$this->views) {
+			throw new \Exception('No folder for views files was specified!');
+		}
+
+		return $this->views;
+	}
+
+	public function setTemplate($template) {
+		$file = $this->views . '/' . $template . '.php';
+
+		if (!file_exists($file)) {
+			throw new \Exception('Template file "' . $file . '" does not exists!');
+		}
+
+		$this->template = $template;
+	}
+
+	public function getTemplate() {
+		if (!$this->template) {
+			throw new \Exception('No template file was specified!');
+		}
+
+		return $this->template;
 	}
 
 }

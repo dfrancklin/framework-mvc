@@ -64,9 +64,9 @@ class Router {
 						'requestMethods' => $requestMethods,
 						'pattern' => $route,
 					]);
-					
+
 					vd($this->routes[$route]);
-					
+
 					throw new \Exception('The route "' . $route . '" already exists with the following HTTP Methods "[' . implode(', ', $requestMethods) . ']"');
 				}
 
@@ -116,7 +116,7 @@ class Router {
 			}
 		}
 	}
-	
+
 	private function existsRoutesMethods($routes, $requestMethods) {
 		foreach($routes as $route) {
 			foreach ($requestMethods as $method) {
@@ -125,7 +125,7 @@ class Router {
 				}
 			}
 		}
-	
+
 		return false;
 	}
 
@@ -139,16 +139,15 @@ class Router {
 		$controller = $this->dm->resolve($map->class);
 		preg_match($map->pattern, $route, $matches);
 		array_shift($matches);
-		
-		$view = $controller->{$map->method}(...$matches);
-		vd($view);
+
+		echo $controller->{$map->method}(...$matches);
 	}
 
 	private function findRoute($route, $requestMethod) {
 		$routes = array_filter($this->routes, function($pattern) use ($route) {
 			return preg_match($pattern, $route);
 		}, ARRAY_FILTER_USE_KEY);
-		
+
 		$routes = array_map(function ($route) use ($requestMethod) {
 			if (in_array($requestMethod, $route->requestMethods)) {
 				return $route;
@@ -158,7 +157,7 @@ class Router {
 		if (!count($routes)) {
 			throw new \Exception('Route "' . $route . '" not found');
 		}
-		
+
 		return $routes[0];
 	}
 
