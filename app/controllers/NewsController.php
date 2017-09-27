@@ -19,18 +19,17 @@ class NewsController {
 	public function news() {
 		$this->view->pageTitle = 'News';
 
-		$this->view->newsList = [
-			(object) [
-				'id' => 1,
-				'title' => 'News #1',
-				'text' => 'lipsum'
-			],
-			(object) [
-				'id' => 2,
-				'title' => 'News #2',
-				'text' => 'lipsum'
-			],
-		];
+		$newsList = [];
+
+		foreach (range(1, 10) as $id) {
+			$newsList[] = (object) [
+				'id' => $id,
+				'title' => 'News #' . $id,
+				'text' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam accumsan, velit id venenatis blandit, dui sem mattis nulla, non varius nunc purus in nisl. Sed malesuada egestas rutrum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean nec porta nunc, id posuere tortor. Duis vitae mollis sapien, nec egestas nisi. Pellentesque sed consequat mi. Quisque sit amet maximus tortor.'
+			];
+		}
+
+		$this->view->newsList = $newsList;
 
 		return $this->view->render('news/home');
 	}
@@ -53,7 +52,7 @@ class NewsController {
 
 	/**
 	 * @RequestMap /{id}
- * @RequestMethod DELETE
+	 * @RequestMethod DELETE
 	 */
 	public function delete($id) {
 		return 'Deleting news ' . $id . '!';

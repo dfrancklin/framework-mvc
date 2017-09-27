@@ -47,7 +47,7 @@ class HomeController extends Controller {
 	 * @RequestMap /news/{year}/{month}/{day}/{slug}
 	 */
 	public function newsByDateAndSlug($year, $month, $day, $slug) {
-		return new View();
+		return 'News page!';
 	}
 
 }

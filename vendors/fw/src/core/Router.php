@@ -2,6 +2,8 @@
 
 namespace FW\Core;
 
+use FW\MVC\View;
+
 class Router {
 
 	private static $instance;
@@ -90,6 +92,8 @@ class Router {
 		$methods = ['GET'];
 		$requiresAuthentication = false;
 		$roles = [];
+		
+// 		$doc = preg_replace("/[ \t]*(?:\/\*\*|\*\/|\*)?[ ]?(.*)?/i", "$1", $method->getDocComment());
 
 		if (preg_match("/@RequestMap\s([^" . PHP_EOL . "]+)/i", $method->getDocComment(), $matches)) {
 			$path = trim($matches[1]);
@@ -152,6 +156,11 @@ class Router {
 
 	public function handle($route, $requestMethod) {
 		$map = $this->findRoute($route, $requestMethod);
+		
+		if (!$map) {
+			echo $this->notFoundHandler($route, $requestMethod);
+			return;
+		}
 
 		if (!in_array($requestMethod, $map->requestMethods)) {
 			throw new \Exception('HTTP Method "' . $requestMethod . '" not allowed on route "' . $route . '"');
@@ -177,11 +186,20 @@ class Router {
 			}, ...array_values($routes));
 		}
 
-		if (!count($routes)) {
-			throw new \Exception('Route "' . $route . '" not found');
+		if (count($routes)) {
+			return $routes[0];
 		}
 
-		return $routes[0];
+		return;
+	}
+	
+	private function notFoundHandler($route) {
+		$view = new View;
+		
+		$view->pageTitle = '404 - Not Found';
+		$view->bind('route', $route);
+		
+		return $view->render(\FW\FW::getInstance()->getTemplate404());
 	}
 
 }

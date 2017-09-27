@@ -13,16 +13,19 @@ class FW {
 
 	public $router;
 
-	private $views;
-
-	private $template;
-	
 	private $components;
+
+	private $views;
+	
+	private $template;
+
+	private $template404;
 
 	protected function __construct() {
 		$this->dm = DependenciesManager::getInstance();
 		$this->router = Router::getInstance();
 		$this->template = 'template';
+		$this->template404 = 'not-found';
 		$this->components = ['Controller', 'Service', 'Repository'];
 	}
 
@@ -139,6 +142,24 @@ class FW {
 		}
 
 		return $this->template;
+	}
+
+	public function setTemplate404($template404) {
+		$file = $this->views . '/' . $template404 . '.php';
+
+		if (!file_exists($file)) {
+			throw new \Exception('Template file "' . $file . '" does not exists!');
+		}
+
+		$this->template404 = $template404;
+	}
+
+	public function getTemplate404() {
+		if (!$this->template404) {
+			throw new \Exception('No template404 file was specified!');
+		}
+
+		return $this->template404;
 	}
 
 }
