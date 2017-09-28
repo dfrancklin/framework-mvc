@@ -6,7 +6,7 @@ class DependenciesManager {
 
 	private static $instance;
 
-	public $instances;
+	private $instances;
 
 	protected function __construct() {
 		$this->instances = [];
@@ -56,18 +56,28 @@ class DependenciesManager {
 		}
 
 		foreach ($interfaces as $interface) {
-			$instance = [
-				'name' => $reflection->getName(),
-				'instance' => null,
-				'dependencies' => $dependencies
-			];
-
 			if (array_key_exists($interface, $this->instances)) {
 				throw new \Exception('An instance for the interface "' . $interface . '" already exists');
 			}
 
-			$this->instances[$interface] = (object) $instance;
+			$this->instances[$interface] = (object) [
+				'name' => $reflection->getName(),
+				'instance' => null,
+				'dependencies' => $dependencies
+			];
 		}
+	}
+
+	public function value($name, $value) {
+		if (array_key_exists($name, $this->instances)) {
+			throw new \Exception('A value with the name "' . $name . '" already exists');
+		}
+
+		$this->instances[$name] = (object) [
+			'name' => null,
+			'instance' => $value,
+			'dependencies' => null
+		];
 	}
 
 	public function resolve($class) {
