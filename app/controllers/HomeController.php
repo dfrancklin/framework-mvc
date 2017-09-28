@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use \FW\MVC\Controller;
-use \FW\MVC\View;
 use \App\Interfaces\IHomeService;
 
 /**
@@ -12,13 +10,11 @@ use \App\Interfaces\IHomeService;
  * @Authenticate
  * @Roles [ADMIN,USER]
  */
-class HomeController extends Controller {
+class HomeController {
 
 	private $service;
 
 	public function __construct(IHomeService $service) {
-		parent::__construct();
-
 		$this->service = $service;
 	}
 

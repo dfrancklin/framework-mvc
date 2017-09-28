@@ -22,14 +22,15 @@ include __DIR__ . '/vendors/fw/load.php';
 $loader->addNamespace('App', __DIR__ . '/app');
 
 use \FW\FW;
+use \FW\View\View;
 
 $fw = FW::getInstance();
 
-$fw->lookThrough(
+$fw->scanComponents(
 	__DIR__ . '/app/controllers',
 	__DIR__ . '/app/services',
 	__DIR__ . '/app/repositories');
 
-$fw->setViews(__DIR__ . '/app/views');
+View::setViews(__DIR__ . '/app/views');
 
 $fw->run();

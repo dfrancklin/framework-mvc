@@ -78,7 +78,7 @@ class DependenciesManager {
 		$map = $this->instances[$class];
 
 		if (!is_null($map->instance)) {
-			return $map->instace;
+			return $map->instance;
 		}
 
 		$dependencies = [];

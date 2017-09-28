@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use \FW\MVC\View;
+use FW\View\IViewFactory;
 
 /**
  * @Controller
@@ -10,14 +10,16 @@ use \FW\MVC\View;
  */
 class NewsController {
 
-	private $view;
+	private $factory;
 
-	public function __construct() {
-		$this->view = new View();
+	public function __construct(IViewFactory $factory) {
+		$this->factory = $factory;
 	}
 
 	public function news() {
-		$this->view->pageTitle = 'News';
+		$view = $this->factory::create();
+
+		$view->pageTitle = 'News';
 
 		$newsList = [];
 
@@ -29,9 +31,9 @@ class NewsController {
 			];
 		}
 
-		$this->view->newsList = $newsList;
+		$view->newsList = $newsList;
 
-		return $this->view->render('news/home');
+		return $view->render('news/home');
 	}
 
 	/**

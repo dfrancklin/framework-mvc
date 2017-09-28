@@ -2,17 +2,21 @@
 
 namespace FW\Core;
 
-use FW\MVC\View;
+use FW\View\IViewFactory;
+use FW\Security\ISecurityService;
+use FW\Security\IAuthentication;
 
 class Router {
 
 	private static $instance;
 
-	public $routes;
+	private $routes;
 
 	private $validMethods;
 
 	private $dm;
+
+	private static $page404 = 'not-found';
 
 	protected function __construct() {
 		$this->routes = [];
@@ -92,7 +96,7 @@ class Router {
 		$methods = ['GET'];
 		$requiresAuthentication = false;
 		$roles = [];
-		
+
 // 		$doc = preg_replace("/[ \t]*(?:\/\*\*|\*\/|\*)?[ ]?(.*)?/i", "$1", $method->getDocComment());
 
 		if (preg_match("/@RequestMap\s([^" . PHP_EOL . "]+)/i", $method->getDocComment(), $matches)) {
@@ -127,7 +131,7 @@ class Router {
 		}
 
 		return (object) [
-			'path' => $path, 
+			'path' => $path,
 			'requestMethods' => $methods,
 			'requiresAuthentication' => $requiresAuthentication,
 			'roles' => $roles,
@@ -156,9 +160,31 @@ class Router {
 
 	public function handle($route, $requestMethod) {
 		$map = $this->findRoute($route, $requestMethod);
-		
+
 		if (!$map) {
 			echo $this->notFoundHandler($route, $requestMethod);
+			return;
+		}
+
+		$security = $this->dm->resolve(ISecurityService::class);
+
+		if ($map->requiresAuthentication && !$security->isAuthenticated()) {
+			$login = $this->dm->resolve(IAuthentication::class);
+
+			if ($login) {
+				echo $login->login($route);
+			}
+
+			return;
+		}
+
+		if (count($map->roles) && !$security->hasRoles($map->roles)) {
+			$login = $this->dm->resolve(IAuthentication::class);
+
+			if ($login) {
+				echo $login->forbidden($route);
+			}
+
 			return;
 		}
 
@@ -176,8 +202,8 @@ class Router {
 	private function findRoute($route, $requestMethod) {
 		$routes = array_filter($this->routes, function($pattern) use ($route) {
 			return preg_match($pattern, $route);
-		}, ARRAY_FILTER_USE_KEY); 
-		
+		}, ARRAY_FILTER_USE_KEY);
+
 		if (count($routes)) {
 			$routes = array_map(function ($route) use ($requestMethod) {
 				if (in_array($requestMethod, $route->requestMethods)) {
@@ -192,14 +218,38 @@ class Router {
 
 		return;
 	}
-	
+
 	private function notFoundHandler($route) {
-		$view = new View;
-		
+		$factory = $this->dm->resolve(IViewFactory::class);
+		$view = $factory::create();
+
 		$view->pageTitle = '404 - Not Found';
 		$view->bind('route', $route);
-		
-		return $view->render(\FW\FW::getInstance()->getTemplate404());
+
+		return $view->render(self::getPage404());
+	}
+
+	public function redirect($route) {
+		header('location: ' . $route);
+		exit;
+	}
+
+	public static function setPage404($page404) {
+		$file = View::getViews() . '/' . $page404 . '.php';
+
+		if (!file_exists($file)) {
+			throw new \Exception('Page file "' . $file . '" does not exists!');
+		}
+
+		self::$page404 = $page404;
+	}
+
+	public static function getPage404() {
+		if (!self::$page404) {
+			throw new \Exception('No template file was specified!');
+		}
+
+		return self::$page404;
 	}
 
 }

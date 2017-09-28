@@ -15,18 +15,10 @@ class FW {
 
 	private $components;
 
-	private $views;
-	
-	private $template;
-
-	private $template404;
-
 	protected function __construct() {
 		$this->dm = DependenciesManager::getInstance();
 		$this->router = Router::getInstance();
-		$this->template = 'template';
-		$this->template404 = 'not-found';
-		$this->components = ['Controller', 'Service', 'Repository'];
+		$this->components = ['Controller', 'Service', 'Repository', 'Factory', 'Component'];
 	}
 
 	public static function getInstance() : self {
@@ -37,7 +29,7 @@ class FW {
 		return self::$instance;
 	}
 
-	public function lookThrough(String ...$folders) {
+	public function scanComponents(String ...$folders) {
 		if (!count($folders)) {
 			throw new \Exception('At least 1 folder needs to be informed');
 		}
@@ -47,7 +39,7 @@ class FW {
 		}
 	}
 
-	public function lookUp($folder, $recursive = false) {
+	private function lookUp($folder, $recursive = false) {
 		if (!$folder) {
 			throw new \Exception('A folder needs to be informed');
 		}
@@ -62,6 +54,8 @@ class FW {
 	}
 
 	public function run() {
+		$this->scanComponents(__DIR__ . '/security', __DIR__ . '/view');
+
 		if (!isset($_SERVER['PATH_INFO']) && !isset($_SERVER['REDIRECT_URL'])) {
 			$controller = $this->router->handle('/', $_SERVER['REQUEST_METHOD']);
 		} else {
@@ -88,7 +82,7 @@ class FW {
 				$className = $matches[1];
 			} elseif (preg_match('/@(' . implode('|', $this->components) . ')/i', trim($line), $matches)) {
 				$isComponent = true;
-				
+
 				if ($matches[0] === '@Controller') {
 					$isController = true;
 				}
@@ -108,58 +102,6 @@ class FW {
 		if($isController) {
 			$this->router->register($fullName);
 		}
-	}
-
-	public function setViews($folder) {
-		if (!file_exists($folder)) {
-			throw new \Exception('Folder "' . $folder . '" does not exists!');
-		}
-
-		$this->views = $folder;
-	}
-
-	public function getViews() {
-		if (!$this->views) {
-			throw new \Exception('No folder for views files was specified!');
-		}
-
-		return $this->views;
-	}
-
-	public function setTemplate($template) {
-		$file = $this->views . '/' . $template . '.php';
-
-		if (!file_exists($file)) {
-			throw new \Exception('Template file "' . $file . '" does not exists!');
-		}
-
-		$this->template = $template;
-	}
-
-	public function getTemplate() {
-		if (!$this->template) {
-			throw new \Exception('No template file was specified!');
-		}
-
-		return $this->template;
-	}
-
-	public function setTemplate404($template404) {
-		$file = $this->views . '/' . $template404 . '.php';
-
-		if (!file_exists($file)) {
-			throw new \Exception('Template file "' . $file . '" does not exists!');
-		}
-
-		$this->template404 = $template404;
-	}
-
-	public function getTemplate404() {
-		if (!$this->template404) {
-			throw new \Exception('No template404 file was specified!');
-		}
-
-		return $this->template404;
 	}
 
 }
