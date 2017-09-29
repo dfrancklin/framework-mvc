@@ -11,12 +11,14 @@ class View {
 
 	private $security;
 
-	private static $views;
+	private $views;
 
-	private static $template = 'template';
+	private $template;
 
-	public function __construct(ISecurityService $security) {
+	public function __construct(ISecurityService $security, string $template, string $views) {
 		$this->security = $security;
+		$this->template = $template;
+		$this->views = $views;
 	}
 
 	public function bind($name, &$value) {
@@ -28,12 +30,12 @@ class View {
 	}
 
 	public function render($page) {
-		$template = self::getViews() . '/' . self::getTemplate() . '.php';
+		$template = $this->views . '/' . $this->template . '.php';
 		if (!file_exists($template)) {
 			throw new \Exception('Template file "' . $template . '" does not exists!');
 		}
 
-		$page = self::getViews() . '/' . $page . '.php';
+		$page = $this->views . '/' . $page . '.php';
 		if (!file_exists($page)) {
 			throw new \Exception('Page file "' . $page . '" does not exists!');
 		}
@@ -55,40 +57,6 @@ class View {
 		list($head, $foot) = preg_split('/<!--\s?content\s?-->/i', $total);
 
 		return $head . $content . $foot;
-	}
-
-	public static function setViews($folder) {
-		if (!file_exists($folder)) {
-			throw new \Exception('Folder "' . $folder . '" does not exists!');
-		}
-
-		self::$views = $folder;
-	}
-
-	public static function getViews() {
-		if (!self::$views) {
-			throw new \Exception('No folder for views files was specified!');
-		}
-
-		return self::$views;
-	}
-
-	public static function setTemplate($template) {
-		$file = self::getViews() . '/' . $template . '.php';
-
-		if (!file_exists($file)) {
-			throw new \Exception('Template file "' . $file . '" does not exists!');
-		}
-
-		self::$template = $template;
-	}
-
-	public static function getTemplate() {
-		if (!self::$template) {
-			throw new \Exception('No template file was specified!');
-		}
-
-		return self::$template;
 	}
 
 }

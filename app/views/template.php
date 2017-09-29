@@ -6,7 +6,7 @@
 	<title><?=(isset($pageTitle) ? $pageTitle : '');?></title>
 </head>
 <body>
-	<?php include self::getViews() . '/menu.part.php'; ?>
+	<?php include $this->views . '/menu.part.php'; ?>
 
 	<!-- content -->
 </body>
