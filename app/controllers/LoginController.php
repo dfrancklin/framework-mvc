@@ -40,7 +40,7 @@ class LoginController implements IAuthentication {
 	 * @RequestMethod POST
 	 */
 	public function authenticate() {
-		
+		($_POST);
 	}
 
 	/**
