@@ -6,7 +6,7 @@ use FW\View\IViewFactory;
 
 interface IAuthentication {
 
-	public function __construct(ISecurityService $service, IViewFactory $factory);
+// 	public function __construct(ISecurityService $service, IViewFactory $factory);
 
 	public function login($returnsTo);
 

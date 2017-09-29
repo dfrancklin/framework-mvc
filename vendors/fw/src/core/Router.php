@@ -16,12 +16,11 @@ class Router {
 
 	private $dm;
 
-	private static $page404 = 'not-found';
-
 	protected function __construct() {
 		$this->routes = [];
 		$this->validMethods = ['CONNECT', 'COPY', 'DELETE', 'GET', 'HEAD', 'LOCK', 'OPTIONS', 'PATCH', 'POST', 'PROPFIND', 'PUT', 'TRACE', 'UNLOCK'];
 		$this->dm = DependenciesManager::getInstance();
+		$this->page404 = Config::getInstance()->get('page-404');
 	}
 
 	public static function getInstance() : self {
@@ -226,30 +225,12 @@ class Router {
 		$view->pageTitle = '404 - Not Found';
 		$view->bind('route', $route);
 
-		return $view->render(self::getPage404());
+		return $view->render($this->page404);
 	}
 
-	public function redirect($route) {
+	public static function redirect($route) {
 		header('location: ' . $route);
 		exit;
-	}
-
-	public static function setPage404($page404) {
-		$file = View::getViews() . '/' . $page404 . '.php';
-
-		if (!file_exists($file)) {
-			throw new \Exception('Page file "' . $file . '" does not exists!');
-		}
-
-		self::$page404 = $page404;
-	}
-
-	public static function getPage404() {
-		if (!self::$page404) {
-			throw new \Exception('No template file was specified!');
-		}
-
-		return self::$page404;
 	}
 
 }

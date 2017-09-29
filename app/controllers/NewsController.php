@@ -17,7 +17,7 @@ class NewsController {
 	}
 
 	public function news() {
-		$view = $this->factory::create();
+		$view = $this->factory::create('template');
 
 		$view->pageTitle = 'News';
 
