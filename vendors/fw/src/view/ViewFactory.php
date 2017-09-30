@@ -3,6 +3,7 @@
 namespace FW\View;
 
 use \FW\Core\Config;
+use \FW\Core\FlashMessages;
 use \FW\Core\DependenciesManager;
 use \FW\Security\ISecurityService;
 
@@ -28,7 +29,7 @@ class ViewFactory implements IViewFactory {
 			$template = self::$config->get('template');
 		}
 
-		return new View($security, $template, $views);
+		return new View($security,FlashMessages::getInstance(), $template, $views);
 	}
 
 }

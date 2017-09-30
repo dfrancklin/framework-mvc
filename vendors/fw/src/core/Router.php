@@ -223,7 +223,7 @@ class Router {
 		$view = $factory::create();
 
 		$view->pageTitle = '404 - Not Found';
-		$view->bind('route', $route);
+		$view->route = $route;
 
 		return $view->render($this->page404);
 	}

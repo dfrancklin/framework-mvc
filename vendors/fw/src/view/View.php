@@ -2,8 +2,10 @@
 
 namespace FW\View;
 
-use \FW\Security\ISecurityService;
+use \FW\Core\Config;
+use \FW\Core\FlashMessages;
 use \FW\Core\DependenciesManager;
+use \FW\Security\ISecurityService;
 
 class View {
 
@@ -11,18 +13,26 @@ class View {
 
 	private $security;
 
+	private $template;
+	
+	private $messages;
+
 	private $views;
 
-	private $template;
-
-	public function __construct(ISecurityService $security, string $template, string $views) {
+	public function __construct(ISecurityService $security, FlashMessages $messages, string $template, string $views) {
 		$this->security = $security;
+		$this->messages = $messages;
 		$this->template = $template;
 		$this->views = $views;
+		$this->data = [];
 	}
 
-	public function bind($name, &$value) {
-		$this->$name = $value;
+	public function __get($name) {
+		if (!array_key_exists($name, $this->data)) {
+			throw new \Exception('A variable "' . $name . '" was not defined on the view');
+		}
+		
+		return $this->data[$name];
 	}
 
 	public function __set($name, $value) {

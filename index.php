@@ -1,11 +1,15 @@
 <?php
 
-session_start();
+if (!session_id()){
+	@session_start();
+}
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-header('refresh:2');
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && !($_SERVER['REDIRECT_URL'] === '/login')) {
+	header('refresh:2');
+}
 
 function vd(...$v) {
 	echo '<pre style="white-space: pre-wrap; word-break: break-all;">';
