@@ -11,3 +11,9 @@ html, body {
 	line-height: 1.5;
 	color: #333;
 }
+
+#message-container {
+	position: fixed;
+	right: 10px;
+	bottom: 10px;
+}

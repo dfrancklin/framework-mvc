@@ -1,18 +1,13 @@
 <div id="container">
 	<div id="form">
 		<h1>Login</h1>
-		
-		<?php
-			if ($this->messages->hasErrors()) {
-				$this->messages->display();
-			}
-		?>
+
 		<form action="/authenticate" method="POST">
 			<input type="hidden" name="returns-to" value="<?=$returnsTo?>">
 
 			<div class="form-group">
 				<label for="email">E-mail:</label>
-				<input type="email" name="email" id="email" class=form-control required value="dfrancklin23@gmail.com">
+				<input type="email" name="email" id="email" class=form-control required autofocus value="dfrancklin23@gmail.com">
 			</div>
 
 			<div class="form-group">

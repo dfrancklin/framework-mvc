@@ -34,7 +34,7 @@ class LoginController implements IAuthentication {
 	 */
 	public function login($returnsTo='') {
 		$view = $this->factory::create('login-template');
-		
+
 		$view->styles = ['app/resources/css/login.css'];
 		$view->returnsTo = $returnsTo;
 
@@ -47,19 +47,17 @@ class LoginController implements IAuthentication {
 	 */
 	public function authenticate() {
 		$user = $this->service->authenticate($_POST['email'], $_POST['password']);
-		
+
 		if (!$user) {
-			$this->message->error('User does not exists or invalid password');
-			Router::redirect($_POST['returns-to']);
+			foreach (range(1, 100) as $value) {
+				$this->message->error('User does not exists or invalid password');
+			}
+
+			$this->redirect();
 		}
-		
+
 		$this->security->authenticate(new UserProfile($user->email, $user->name, $user->roles));
-		
-		if (isset($_POST['returns-to']) && !empty(trim($_POST['returns-to']))) {
-			Router::redirect($_POST['returns-to']);
-		} else {
-			Router::redirect('/');
-		}
+		$this->redirect();
 	}
 
 	/**
@@ -75,6 +73,14 @@ class LoginController implements IAuthentication {
 	public function logout() {
 		$this->security->logout();
 		Router::redirect('/');
+	}
+
+	private function redirect() {
+		if (isset($_POST['returns-to']) && !empty(trim($_POST['returns-to']))) {
+			Router::redirect($_POST['returns-to']);
+		} else {
+			Router::redirect('/');
+		}
 	}
 
 }

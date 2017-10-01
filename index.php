@@ -7,8 +7,11 @@ if (!session_id()){
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && !($_SERVER['REDIRECT_URL'] === '/login')) {
-	header('refresh:2');
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && !(
+		(isset($_SERVER['REDIRECT_URL']) && $_SERVER['REDIRECT_URL'] === '/login') ||
+		(isset($_SERVER['PATH_INFO']) && $_SERVER['PATH_INFO'] === '/login')
+	)) {
+	// header('refresh:2');
 }
 
 function vd(...$v) {
