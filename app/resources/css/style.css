@@ -12,8 +12,55 @@ html, body {
 	color: #333;
 }
 
-#message-container {
-	position: fixed;
-	right: 10px;
-	bottom: 10px;
+#messages-wrapper {
+    position: fixed;
+    right: 10px;
+    bottom: 0;
+    height: 100%;
+    padding: 10px 0;
+    pointer-events: none;
+    display: flex;
+    align-items: flex-end;
+}
+
+#messages-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100%;
+    pointer-events: all;
+    flex: 1;
+}
+
+.message {
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    margin: 0 0 10px;
+    border-radius: 3px;
+    box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.2);
+    max-width: 100%;
+    width: 100%;
+}
+
+.message-error {
+    border-color: darkred;
+    background-color: lightcoral;
+    color: darkred;
+}
+
+.message-warning {
+    border-color: darkgoldenrod;
+    background-color: lightyellow;
+    color: darkgoldenrod;
+}
+
+.message-success {
+    border-color: darkgreen;
+    background-color: lightgreen;
+    color: darkgreen;
+}
+
+.message-info {
+    border-color: darkblue;
+    background-color: lightblue;
+    color: darkblue;
 }

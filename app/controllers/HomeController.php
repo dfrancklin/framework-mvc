@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use \App\Interfaces\IHomeService;
+use \FW\View\IViewFactory;
 
 /**
  * @Controller
@@ -13,13 +14,27 @@ use \App\Interfaces\IHomeService;
 class HomeController {
 
 	private $service;
+	
+	private $factory;
 
-	public function __construct(IHomeService $service) {
+	public function __construct(IHomeService $service, IViewFactory $factory) {
 		$this->service = $service;
+		$this->factory = $factory;
 	}
 
 	public function index() {
 		return 'Home page!';
+	}
+
+	/**
+	 * @RequestMap dashboard
+	 */
+	public function dashboard() {
+		$view = $this->factory::create();
+		
+		$view->pageTitle = 'Dashboard';
+		
+		return $view->render('dashboard');
 	}
 
 	/**

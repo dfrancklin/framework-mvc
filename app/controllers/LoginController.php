@@ -49,14 +49,12 @@ class LoginController implements IAuthentication {
 		$user = $this->service->authenticate($_POST['email'], $_POST['password']);
 
 		if (!$user) {
-			foreach (range(1, 100) as $value) {
-				$this->message->error('User does not exists or invalid password');
-			}
-
+			$this->message->error('User does not exists or invalid password');
 			$this->redirect();
 		}
 
 		$this->security->authenticate(new UserProfile($user->email, $user->name, $user->roles));
+		$this->message->success('You are now logged in!');
 		$this->redirect();
 	}
 
@@ -79,7 +77,7 @@ class LoginController implements IAuthentication {
 		if (isset($_POST['returns-to']) && !empty(trim($_POST['returns-to']))) {
 			Router::redirect($_POST['returns-to']);
 		} else {
-			Router::redirect('/');
+			Router::redirect('/dashboard');
 		}
 	}
 

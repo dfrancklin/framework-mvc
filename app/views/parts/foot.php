@@ -1,8 +1,10 @@
 	<?php
-		if ($this->messages->hasErrors()) {
+		if ($this->messages->hasMessages()) {
 			?>
-				<div id="message-container">
-					<?php $this->messages->display(); ?>
+				<div id="messages-wrapper">
+					<div id="messages-container">
+						<?php $this->messages->display(); ?>
+					</div>
 				</div>
 			<?php
 		}

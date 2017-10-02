@@ -27,6 +27,10 @@ class FlashMessages {
 	protected function __construct() {
 		$this->appId = Config::getInstance()->get('app-id');
 
+		if (!array_key_exists($this->appId, $_SESSION)) {
+			$_SESSION[$this->appId][$this->id] = [];
+		}
+
 		if (!array_key_exists($this->id, $_SESSION[$this->appId])){
 			$_SESSION[$this->appId][$this->id] = [];
 		}
@@ -43,14 +47,14 @@ class FlashMessages {
 	public function __call($method, $parameters) {
 		if (defined('self::' . strtoupper($method))) {
 			$type = constant('self::' . strtoupper($method));
-			$this->add($parameters[0], $type);
+			$this->add($type, ...$parameters);
 		} else {
 			throw new \Exception('The method "' . $method . '" does not exists on class "' . self::class . '"');
 		}
 	}
 
-	public function add($message, $type) {
-		if (!trim($message)) {
+	public function add($type, $text, $title = null) {
+		if (!trim($text)) {
 			return false;
 		}
 
@@ -62,7 +66,10 @@ class FlashMessages {
 			$_SESSION[$this->appId][$this->id][$type] = [];
 		}
 
-		$_SESSION[$this->appId][$this->id][$type][] = $message;
+		$_SESSION[$this->appId][$this->id][$type][] = (object) [
+			'title' => $title,
+			'text' => $text,
+		];
 	}
 
 	public function display($types = null, $print = true) {
@@ -126,9 +133,17 @@ class FlashMessages {
 
 	protected function format($message, $type) {
 		$msgType = isset($this->types[$type]) ? $type : $this->defaultType;
-		$css = 'alert alert-' . $this->types[$type];
+		$css = 'message message-' . $this->types[$type];
+		
+		$body = '';
+		
+		if ($message->title) {
+			$body .= '<strong>' . $message->title . '</strong> ';
+		}
+		
+		$body .= $message->text;
 
-		return sprintf($this->wrapper, $css, $message);
+		return sprintf($this->wrapper, $css, $body);
 	}
 
 	protected function clear($types = []) {
