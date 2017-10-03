@@ -46,23 +46,30 @@ class LoginController implements IAuthentication {
 	 * @RequestMethod POST
 	 */
 	public function authenticate() {
-		$user = $this->service->authenticate($_POST['email'], $_POST['password']);
+		try {
+			$user = $this->service->authenticate($_POST['email'], $_POST['password']);
 
-		if (!$user) {
-			$this->message->error('User does not exists or invalid password');
+			if (!$user) {
+				$this->message->warning('User does not exists or invalid password');
+			} else {
+				$this->security->authenticate(new UserProfile($user->email, $user->name, $user->roles));
+
+				if ($this->security->isAuthenticated()) {
+					$this->message->success('You are now logged in!');
+				}
+			}
+		} catch(\Throwable $e) {
+			$this->message->error('A problem occurred during authentication: ' . $e->getMessage(), 'Authentication error!');
+		} finally {
 			$this->redirect();
 		}
-
-		$this->security->authenticate(new UserProfile($user->email, $user->name, $user->roles));
-		$this->message->success('You are now logged in!');
-		$this->redirect();
 	}
 
 	/**
 	 * @RequestMap /forbidden
 	 */
 	public function forbidden($route) {
-
+		return $this->factory::create()->render('forbidden');
 	}
 
 	/**
@@ -70,6 +77,7 @@ class LoginController implements IAuthentication {
 	 */
 	public function logout() {
 		$this->security->logout();
+		$this->message->info('You are now logged out!');
 		Router::redirect('/');
 	}
 

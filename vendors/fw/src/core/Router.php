@@ -177,7 +177,7 @@ class Router {
 			return;
 		}
 
-		if (count($map->roles) && !$security->hasRoles($map->roles)) {
+		if (count($map->roles) && !$security->hasAnyRoles($map->roles)) {
 			$login = $this->dm->resolve(IAuthentication::class);
 
 			if ($login) {

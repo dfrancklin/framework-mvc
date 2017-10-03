@@ -18,11 +18,19 @@ class FlashMessages {
 		self::INFO => 'info',
 	];
 
-	protected $wrapper = "<div class='%s'>%s</div>\n";
+	protected $close = '<input type="checkbox" name="%s" id="%s" class="message-dismiss"><label for="%s" class="message-dismiss-button %s">&times;</label>';
+
+	protected $wrapper = '
+		<div class="message-wrapper">
+			%s
+			<div class="message %s">%s</div>
+		</div>' . "\n";
 
 	private $appId;
 
 	private $id = 'flash-messages';
+
+	private $last = 0;
 
 	protected function __construct() {
 		$this->appId = Config::getInstance()->get('app-id');
@@ -67,13 +75,14 @@ class FlashMessages {
 		}
 
 		$_SESSION[$this->appId][$this->id][$type][] = (object) [
+			'id' => ++$this->last,
 			'title' => $title,
 			'text' => $text,
 		];
 	}
 
 	public function display($types = null, $print = true) {
-		if (!isset($_SESSION[$this->appId][$this->id])) {
+		if (!isset($_SESSION[$this->appId]) || !isset($_SESSION[$this->appId][$this->id])) {
 			return false;
 		}
 
@@ -98,6 +107,7 @@ class FlashMessages {
 			}
 
 			foreach($_SESSION[$this->appId][$this->id][$type] as $message) {
+				$message->id = ++$this->last;
 				$output .= $this->format($message, $type);
 			}
 
@@ -133,17 +143,21 @@ class FlashMessages {
 
 	protected function format($message, $type) {
 		$msgType = isset($this->types[$type]) ? $type : $this->defaultType;
-		$css = 'message message-' . $this->types[$type];
-		
+		$css = 'message-' . $this->types[$type];
+		$messageId = 'message-' . $message->id;
+		$output = '';
 		$body = '';
-		
+
 		if ($message->title) {
 			$body .= '<strong>' . $message->title . '</strong> ';
 		}
-		
+
 		$body .= $message->text;
 
-		return sprintf($this->wrapper, $css, $body);
+		$close = sprintf($this->close, $messageId, $messageId, $messageId, $css);
+		$output = sprintf($this->wrapper, $close, $css, $body);
+
+		return $output;
 	}
 
 	protected function clear($types = []) {

@@ -4,21 +4,28 @@ namespace FW;
 
 use \FW\Core\DependenciesManager;
 use \FW\Core\Router;
+use \FW\Core\Config;
 
 class FW {
 
 	private static $instance;
 
-	public $dm;
+	private $dm;
 
-	public $router;
+	private $router;
+
+	private $config;
 
 	private $components;
+
+	private $folders;
 
 	protected function __construct() {
 		$this->dm = DependenciesManager::getInstance();
 		$this->router = Router::getInstance();
+		$this->config = Config::getInstance();
 		$this->components = ['Controller', 'Service', 'Repository', 'Factory', 'Component'];
+		$this->folders = [];
 	}
 
 	public static function getInstance() : self {
@@ -34,9 +41,9 @@ class FW {
 			throw new \Exception('At least 1 folder needs to be informed');
 		}
 
-		foreach ($folders as $folder) {
-			$this->lookUp($folder, true);
-		}
+		$this->folders = array_merge($this->folders, $folders);
+
+		return $this;
 	}
 
 	private function lookUp($folder, $recursive = false) {
@@ -54,7 +61,13 @@ class FW {
 	}
 
 	public function run() {
-		$this->scanComponents(__DIR__ . '/security', __DIR__ . '/view');
+		$systemFolders = $this->config->get('system-folders');
+
+		$this->scanComponents(...$systemFolders);
+
+		foreach ($this->folders as $folder) {
+			$this->lookUp($folder, true);
+		}
 
 		if (!isset($_SERVER['PATH_INFO']) && !isset($_SERVER['REDIRECT_URL'])) {
 			$controller = $this->router->handle('/', $_SERVER['REQUEST_METHOD']);

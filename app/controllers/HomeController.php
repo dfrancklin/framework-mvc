@@ -14,7 +14,7 @@ use \FW\View\IViewFactory;
 class HomeController {
 
 	private $service;
-	
+
 	private $factory;
 
 	public function __construct(IHomeService $service, IViewFactory $factory) {
@@ -23,7 +23,7 @@ class HomeController {
 	}
 
 	public function index() {
-		return 'Home page!';
+		return $this->dashboard();
 	}
 
 	/**
@@ -31,9 +31,9 @@ class HomeController {
 	 */
 	public function dashboard() {
 		$view = $this->factory::create();
-		
+
 		$view->pageTitle = 'Dashboard';
-		
+
 		return $view->render('dashboard');
 	}
 

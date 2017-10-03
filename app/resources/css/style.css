@@ -13,54 +13,87 @@ html, body {
 }
 
 #messages-wrapper {
-    position: fixed;
-    right: 10px;
-    bottom: 0;
-    height: 100%;
-    padding: 10px 0;
-    pointer-events: none;
-    display: flex;
-    align-items: flex-end;
+	position: fixed;
+	right: 10px;
+	bottom: 0;
+	height: 100%;
+	padding: 10px 0;
+	pointer-events: none;
+	display: flex;
+	align-items: flex-end;
 }
 
 #messages-container {
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 100%;
-    pointer-events: all;
-    flex: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 100%;
+	pointer-events: all;
+	flex: 1;
+}
+
+.message-wrapper {
+	position: relative;
+	display: flex;
+	float: right;
+	clear: right;
+}
+
+.message-dismiss {
+	display: none;
+}
+
+.message-dismiss-button {
+	flex: 1;
+	align-self: center;
+	right: -33px;
+	position: relative;
+	cursor: pointer;
+	line-height: 23px;
+	width: 23px;
+	flex-basis: 23px;
+	text-align: center;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}
+
+.message-dismiss:checked + .message-dismiss-button {
+	display: none;
+}
+
+.message-dismiss:checked + .message-dismiss-button + .message {
+	display: none;
 }
 
 .message {
-    border: 1px solid #ccc;
-    padding: 10px 20px;
-    margin: 0 0 10px;
-    border-radius: 3px;
-    box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.2);
-    max-width: 100%;
-    width: 100%;
+	border: 1px solid #ccc;
+	padding: 10px 10px 10px 43px;
+	border-radius: 3px;
+	box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.2);
+	max-width: 100%;
+	width: 100%;
+	margin: 10px 0;
 }
 
 .message-error {
-    border-color: darkred;
-    background-color: lightcoral;
-    color: darkred;
+	border-color: darkred;
+	background-color: lightcoral;
+	color: darkred;
 }
 
 .message-warning {
-    border-color: darkgoldenrod;
-    background-color: lightyellow;
-    color: darkgoldenrod;
+	border-color: darkgoldenrod;
+	background-color: lightyellow;
+	color: darkgoldenrod;
 }
 
 .message-success {
-    border-color: darkgreen;
-    background-color: lightgreen;
-    color: darkgreen;
+	border-color: darkgreen;
+	background-color: lightgreen;
+	color: darkgreen;
 }
 
 .message-info {
-    border-color: darkblue;
-    background-color: lightblue;
-    color: darkblue;
+	border-color: darkblue;
+	background-color: lightblue;
+	color: darkblue;
 }
