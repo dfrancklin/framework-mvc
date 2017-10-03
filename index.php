@@ -31,7 +31,6 @@ include __DIR__ . '/vendors/fw/load.php';
 $loader->addNamespace('App', __DIR__ . '/app');
 
 use \FW\FW;
-use \FW\Core\Config;
 
 $fw = FW::getInstance();
 
