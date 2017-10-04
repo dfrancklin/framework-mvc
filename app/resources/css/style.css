@@ -97,3 +97,25 @@ html, body {
 	background-color: lightblue;
 	color: darkblue;
 }
+
+.menu {
+	flex-basis: 200px;
+	max-width: 200px;
+	color: #fff;
+	padding-left: 0;
+	padding-right: 0;
+	position: fixed;
+	top: 56px;
+	bottom: 0;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.main {
+	padding-top: 56px;
+}
+
+.main--content {
+	padding-top: 20px;
+	margin-left: 200px;
+}

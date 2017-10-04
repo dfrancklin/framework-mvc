@@ -1,10 +1,8 @@
-<div class="container-fluid">
+<div class="container-fluid main">
 	<div class="row">
-		<aside class="col col-lg-3">
-			<h3>Menu<?php echo $this->security->isAuthenticated() ? ' Authenticated' : ''; ?></h3>
-		</aside>
+		<?php include $this->views . '/parts/menu.php'; ?>
 
-		<div id="main" class="col">
+		<div class="col main--content">
 			<!-- content -->
 		</div>
 	</div>
