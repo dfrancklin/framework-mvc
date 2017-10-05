@@ -111,6 +111,45 @@ html, body {
     overflow-y: auto;
 }
 
+.menu--title {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.menu--title::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
+.menu--title a {
+    float: left;
+    font-size: 18px;
+    line-height: 1;
+    color: #51586a;
+}
+
+.menu--title a span {
+	font-size: 40px;
+}
+
+.menu--title a span::before {
+    position: relative;
+    top: 2px;
+    display: inline-block;
+    font-family: "toolkit-entypo";
+    speak: none;
+    font-size: 100%;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+	content: "\EADB";
+}
+
 .main {
     padding-top: 56px;
     margin-left: 200px;

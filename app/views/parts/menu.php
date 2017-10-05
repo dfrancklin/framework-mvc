@@ -6,14 +6,8 @@
 	<a class="nav-link" href="/sales">Sales</a>
 </aside> -->
 
-<div class="menu ble">
+<aside class="menu ble">
 	<nav>
-		<div class="blf">
-			<a class="blh bmh" href="index.html">
-				<span class="bv bch bli"></span>
-			</a>
-		</div>
-		
 		<div class="bki" id="nav-toggleable-md">
 			<form class="blj">
 				<input class="form-control" type="text" placeholder="Search...">
@@ -64,4 +58,4 @@
 			<hr class="bmi aah">
 		</div>
 	</nav>
-</div>
+</aside>

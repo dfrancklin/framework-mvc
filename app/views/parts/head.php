@@ -6,6 +6,7 @@
 	<title><?=(isset($pageTitle) ? $pageTitle : '');?></title>
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="app/resources/css/style.css">
 	<link rel="stylesheet" href="app/resources/css/toolkit.css">
 	<?php
