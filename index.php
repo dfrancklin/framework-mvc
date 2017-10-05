@@ -30,6 +30,8 @@ include __DIR__ . '/vendors/fw/load.php';
 
 $loader->addNamespace('App', __DIR__ . '/app');
 
+include __DIR__ . '/app/config.php';
+
 use \FW\FW;
 
 $fw = FW::getInstance();
@@ -38,7 +40,5 @@ $fw->scanComponents(
 	__DIR__ . '/app/controllers',
 	__DIR__ . '/app/services',
 	__DIR__ . '/app/repositories');
-
-$config->set('views-folder', __DIR__ . '/app/views');
 
 $fw->run();

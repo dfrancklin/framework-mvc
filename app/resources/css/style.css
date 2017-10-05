@@ -99,23 +99,45 @@ html, body {
 }
 
 .menu {
-	flex-basis: 200px;
-	max-width: 200px;
-	color: #fff;
-	padding-left: 0;
-	padding-right: 0;
-	position: fixed;
-	top: 56px;
-	bottom: 0;
-	overflow-x: hidden;
-	overflow-y: auto;
+    width: 200px;
+    max-width: 100%;
+    color: #fff;
+    padding-left: 0;
+    padding-right: 0;
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .main {
-	padding-top: 56px;
+    padding-top: 56px;
+    margin-left: 200px;
+    position: relative;
+	min-height: 100%;
+    padding-bottom: 56px;
 }
 
 .main--content {
-	padding-top: 20px;
-	margin-left: 200px;
+    padding-top: 20px;
+}
+
+.main--footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+/*#########################*/
+.bkb {
+    display: block;
+    width: 40px;
+    padding: 10px;
+    font-size: 16px;
+    color: #51586a;
+    background: transparent;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
 }

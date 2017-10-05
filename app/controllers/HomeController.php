@@ -43,7 +43,7 @@ class HomeController {
 	 * @Roles [ADMIN]
 	 */
 	public function products() {
-		return 'Products page!';
+		return json_encode(['title'=>'Products']);
 	}
 
 	/**
