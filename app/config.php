@@ -4,12 +4,10 @@ $config = \FW\Core\Config::getInstance();
 
 $config->set('views-folder', __DIR__ . '/views');
 $config->set('menu', (object) [
-	'title' => 'Title',
-	'icon' => 'Icon',
 	'groups' => [
 		(object) [
 			'title' => 'Title',
-			'icon' => 'Icon',
+			'icon' => 'build',
 			'items' => [
 				(object) [
 					'title' => 'Dashboard',
@@ -17,7 +15,7 @@ $config->set('menu', (object) [
 					'href' => '/dashboard',
 					'class' => 'menu--item',
 					'classActive' => 'menu--item__active',
-					'active' => ['/', '/dashboard'],
+					'activeRoute' => ['/', '/dashboard'],
 					'roles' => [],
 				],
 				(object) [
@@ -26,7 +24,7 @@ $config->set('menu', (object) [
 					'href' => '/products',
 					'class' => 'menu--item',
 					'classActive' => 'menu--item__active',
-					'active' => ['/products/*'],
+					'activeRoute' => ['/products/*'],
 					'roles' => [],
 				],
 			],

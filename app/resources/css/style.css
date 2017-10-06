@@ -75,83 +75,66 @@ html, body {
 }
 
 .message-error {
-	border-color: darkred;
+	border-color: red;
 	background-color: lightcoral;
 	color: darkred;
 }
 
 .message-warning {
-	border-color: darkgoldenrod;
+	border-color: goldenrod;
 	background-color: lightyellow;
 	color: darkgoldenrod;
 }
 
 .message-success {
-	border-color: darkgreen;
+	border-color: green;
 	background-color: lightgreen;
 	color: darkgreen;
 }
 
 .message-info {
-	border-color: darkblue;
+	border-color: blue;
 	background-color: lightblue;
 	color: darkblue;
 }
 
+/*---------------------------*/
 .menu {
     width: 200px;
     max-width: 100%;
     color: #fff;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
     position: fixed;
     top: 56px;
     bottom: 0;
     overflow-x: hidden;
     overflow-y: auto;
+    /* background-color: #252830 !important; */
 }
 
 .menu--title {
-    position: relative;
-    padding-bottom: 20px;
-}
-
-.menu--title::after {
-    display: block;
-    clear: both;
-    content: "";
-}
-
-.menu--title a {
-    float: left;
-    font-size: 18px;
-    line-height: 1;
-    color: #51586a;
-}
-
-.menu--title a span {
-	font-size: 40px;
-}
-
-.menu--title a span::before {
-    position: relative;
-    top: 2px;
-    display: inline-block;
-    font-family: "toolkit-entypo";
-    speak: none;
-    font-size: 100%;
-    font-style: normal;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 5px;
+    font-size: 85%;
     font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-	content: "\EADB";
+    letter-spacing: 1px;
+    color: #848B9D;
+    text-transform: uppercase;
 }
 
+.menu--title .material-icons {
+	font-size: 85%;
+	vertical-align: top;
+}
+
+.menu--group {
+	margin: 10px 0;
+}
+
+/*---------------------------*/
 .main {
-    padding-top: 56px;
+	padding-top: 56px;
     margin-left: 200px;
     position: relative;
 	min-height: 100%;
@@ -159,24 +142,17 @@ html, body {
 }
 
 .main--content {
-    padding-top: 20px;
+	padding-top: 20px;
 }
 
 .main--footer {
-    position: absolute;
+	position: absolute;
     right: 0;
     bottom: 0;
     left: 0;
 }
 
-/*#########################*/
-.bkb {
-    display: block;
-    width: 40px;
-    padding: 10px;
-    font-size: 16px;
-    color: #51586a;
-    background: transparent;
-    border: 1px solid #e5e5e5;
-    border-radius: 0.25rem;
+/*---------------------------*/
+.material-icons {
+    line-height: 1.1;
 }

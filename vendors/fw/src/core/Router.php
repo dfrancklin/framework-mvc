@@ -16,6 +16,8 @@ class Router {
 
 	private $dm;
 
+	private $activeRoute;
+
 	protected function __construct() {
 		$this->routes = [];
 		$this->validMethods = ['CONNECT', 'COPY', 'DELETE', 'GET', 'HEAD', 'LOCK', 'OPTIONS', 'PATCH', 'POST', 'PROPFIND', 'PUT', 'TRACE', 'UNLOCK'];
@@ -195,6 +197,8 @@ class Router {
 		preg_match($map->pattern, $route, $matches);
 		array_shift($matches);
 
+		$this->activeRoute = $route;
+
 		echo $controller->{$map->method}(...$matches);
 	}
 
@@ -231,6 +235,10 @@ class Router {
 	public static function redirect($route) {
 		header('location: ' . $route);
 		exit;
+	}
+
+	public function getActiveRoute() {
+		return $this->activeRoute;
 	}
 
 }
