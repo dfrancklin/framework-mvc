@@ -132,6 +132,11 @@ html, body {
 	margin: 10px 0;
 }
 
+.menu--item .material-icons {
+    font-size: 100%;
+    vertical-align: middle;
+}
+
 /*---------------------------*/
 .main {
 	padding-top: 56px;

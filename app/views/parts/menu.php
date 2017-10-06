@@ -1,4 +1,5 @@
 <?php App\Components\MenuComponent::render(); ?>
+<li class="menu--item"><a href="%s" class="nav-link%s">%s%s</a></li>
 <!-- <aside class="menu bg-dark nav flex-column nav-pills">
 	<a class="nav-link" href="/dashboard">Dashboard</a>
 	<a class="nav-link" href="/users">Users</a>

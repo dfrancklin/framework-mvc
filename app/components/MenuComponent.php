@@ -10,8 +10,8 @@ class MenuComponent {
 		'menu' => '<aside class="menu bg-dark">%s</aside>',
 		'menu-group' => '<nav class="menu--group">%s%s</nav>',
 		'menu-title' => '<h3 class="menu--title">%s%s</h3>',
-		'menu-content' => '<ul class="menu--content">%s</ul>',
-		'menu-item' => '<li class="menu--item">%s</li>',
+		'menu-content' => '<ul class="menu--content nav flex-column nav-pills">%s</ul>',
+		'menu-item' => '<li class="menu--item nav-item"><a href="%s" class="nav-link %s">%s%s</a></li>',
 		'icon' => '<span class="material-icons mr-2">%s</span>',
 	];
 
@@ -54,25 +54,35 @@ class MenuComponent {
 	}
 
 	private static function formatItem($item) {
-		echo '<div class="main"><div class"container-fluid">';
+// 		echo '<div style="margin-left: 200px; margin-top: 60px;"><div class="container-fluid">';
 		$dm = \FW\Core\DependenciesManager::getInstance();
 		$router = \FW\Core\Router::getInstance();
 		$security = $dm->resolve(\FW\Security\SecurityService::class);
 
 		$show = !empty($item->roles) ? $security->hasAnyRoles($item->roles) : true;
-		$active = $router->getActiveRoute();
+		$active = false;
 
 		if (!$show) {
 			return;
 		}
 
 		foreach ($item->activeRoute as $route) {
-			$pattern = '/^' . preg_replace(['/[\/\/]+/i', '/\//i', '/([\*]+)/i'], ['/', '\/', '(.*)'], $route) . '$/';
-			vd($active, $pattern, preg_match($pattern, $active));
+			$pattern = '/^' . preg_replace(['/[\/\/]+/i', '/\//i', '/([\*]+)/i'], ['/', '\/', '?.*'], $route) . '$/';
+			//vd($router->getActiveRoute(), $pattern, preg_match($pattern, $router->getActiveRoute()));
+			
+			if (preg_match($pattern, $router->getActiveRoute())) {
+				$active = true;
+				break;
+			}
 		}
-
-
-		echo '</div></div>';
+		
+// 		vd($router->getActiveRoute() . ' - ' . $show  . ' - ' . $active);
+		$icon = $item->icon
+				? sprintf(self::$templates['icon'], $item->icon)
+				: '';
+// 		echo '</div></div>';
+		
+		return sprintf(self::$templates['menu-item'], $item->href, $active ? 'active menu--item__active' : '', $icon, $item->title);
 	}
 
 }
