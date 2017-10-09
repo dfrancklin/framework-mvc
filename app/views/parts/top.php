@@ -1,5 +1,5 @@
 <header class="header fixed-top">
-	<nav class="header__navbar navbar navbar-expand-md navbar-dark bg-dark">
+	<nav class="header__navbar navbar navbar-expand-lg navbar-dark bg-dark">
 		<button class="navbar-toggler js-menu-show mr-3 header__menu-toggler" aria-label="Toggle navigation">
 			<span class="material-icons">menu</span>
 		</button>
