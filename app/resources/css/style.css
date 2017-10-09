@@ -14,7 +14,7 @@ html, body {
 
 /*---------------------------*/
 .header {
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+    box-shadow: 2px 7px 12px rgba(0, 0, 0, 0.4);
 }
 
 /*---------------------------*/
@@ -38,79 +38,66 @@ html, body {
 	flex: 1;
 }
 
-.message-wrapper {
-	position: relative;
-	display: flex;
-	float: right;
-	clear: right;
-}
-
-.message-dismiss {
-	display: none;
-}
-
-.message-dismiss-button {
-	flex: 1;
-	align-self: center;
-	right: -33px;
-	position: relative;
-	cursor: pointer;
-	line-height: 23px;
-	width: 23px;
-	flex-basis: 23px;
-	text-align: center;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-}
-
-.message-dismiss:checked + .message-dismiss-button {
-	display: none;
-}
-
-.message-dismiss:checked + .message-dismiss-button + .message {
-	display: none;
-}
-
-.message {
-	border: 1px solid #ccc;
-	padding: 10px 10px 10px 43px;
-	border-radius: 3px;
-	box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.2);
-	max-width: 100%;
-	width: 100%;
-	margin: 10px 0;
-}
-
-.message-error {
-	border-color: red;
-	background-color: lightcoral;
-	color: darkred;
-}
-
-.message-warning {
-	border-color: goldenrod;
-	background-color: lightyellow;
-	color: darkgoldenrod;
-}
-
-.message-success {
-	border-color: green;
-	background-color: lightgreen;
-	color: darkgreen;
-}
-
-.message-info {
-	border-color: blue;
-	background-color: lightblue;
-	color: darkblue;
-}
-
 /*---------------------------*/
 .menu {
-    width: 230px;
-    max-width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+	z-index: 1030;
+}
+
+.menu--visible {
+  pointer-events: auto;
+}
+
+.menu::before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  will-change: opacity;
+  transition: opacity 0.3s cubic-bezier(0,0,0.3,1);
+}
+
+/* 
+.menu::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+} */
+
+.menu__wrapper {
+    position: fixed;
+    width: 90%;
+    max-width: 250px;
+    height: 100%;
+    box-shadow: 2px 7px 12px rgba(0,0,0,0.4);
+    transform: translateX(-102%);
+    /* display: flex; */
+    /* flex-direction: column; */
+    will-change: transform;
     color: #fff;
     padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* .menu__wrapper {
+    width: 230px;
+    max-width: 100%;
     position: fixed;
     top: 56px;
     bottom: 0;
@@ -119,6 +106,38 @@ html, body {
     box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4);
     z-index: 1030;
     transform: translateX(0);
+} */
+
+.menu--animatable .menu__wrapper {
+  transition: transform 0.13s cubic-bezier(0,0,0.3,1);
+}
+
+.menu--visible.menu--animatable .menu__wrapper {
+  transition: transform 0.33s cubic-bezier(0,0,0.3,1);
+}
+
+.menu--visible::before {
+  opacity: 1;
+}
+
+.menu--visible .menu__wrapper {
+  transform: none;
+}
+
+.menu__hide {
+    /* position: absolute; */
+    /* left: 16px; */
+    /* top: 16px; */
+    background: none;
+    border: none;
+    color: #FFF;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin: 0;
+    align-self: flex-end;
+    flex: 0 0 24px;
+	margin-top: 10px;
 }
 
 .menu__title {
@@ -162,8 +181,7 @@ html, body {
 
 /*---------------------------*/
 .menu + .main {
-	margin-left: 230px;
-	padding: 56px 0px;
+		padding: 56px 0px;
 }
 
 .menu + .main .main__content {
@@ -183,4 +201,33 @@ html, body {
 #messages-container .alert {
     /* width: auto; */
     /* display: inline-block; */
+}
+
+/*---------------------------*/
+@media (min-width: 768px) {
+	.menu + .main {
+		margin-left: 250px;
+	}
+	
+	.menu__wrapper {
+		top: 56px;
+    transform: translateX(0);
+		pointer-events: auto;
+	}
+	
+	.menu__hide {
+		display: none;
+	}
+	
+	.menu__hide + .menu__group {
+		margin-top: 10px;
+	}
+	
+	.menu--visible {
+		pointer-events: none;
+	}
+	
+	.menu--visible::before {
+		opacity: 0;
+	}
 }

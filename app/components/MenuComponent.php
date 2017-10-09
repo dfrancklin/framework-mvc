@@ -7,7 +7,7 @@ class MenuComponent {
 	private static $config;
 
 	private static $templates = [
-		'menu' => '<aside class="menu bg-dark">%s</aside>',
+		'menu' => '<aside class="menu js-menu"><div class="menu__wrapper js-menu-container bg-dark"><button class="menu__hide js-menu-hide">&times;</button>%s</div></aside>',
 		'menu-group' => '<nav class="menu__group">%s%s</nav>',
 		'menu-title' => '<h3 class="menu__title">%s%s</h3>',
 		'menu-content' => '<ul class="menu__content nav flex-column nav-pills">%s</ul>',
@@ -23,7 +23,7 @@ class MenuComponent {
 		foreach ($menu->groups as $group) {
 			$output .= self::formatGroup($group);
 		}
-
+		
 		echo sprintf(self::$templates['menu'], $output);
 	}
 
