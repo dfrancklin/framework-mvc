@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-	<button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#nav-toggleable-md">
+<nav class="header navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+	<button class="navbar-toggler mr-3 header__menu-toggle" aria-label="Toggle navigation">
 		<span class="material-icons">menu</span>
 	</button>
 

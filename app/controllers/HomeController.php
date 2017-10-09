@@ -37,28 +37,4 @@ class HomeController {
 		return $view->render('dashboard');
 	}
 
-	/**
-	 * @RequestMap products
-	 * @RequestMethod [GET, PUT, POST, PATCH]
-	 * @Roles [ADMIN]
-	 */
-	public function products() {
-		return json_encode(['title'=>'Products']);
-	}
-
-	/**
-	 * @RequestMap save
-	 * @RequestMethod POST
-	 */
-	public function save() {
-		return 'Saving!';
-	}
-
-	/**
-	 * @RequestMap /news/{year}/{month}/{day}/{slug}
-	 */
-	public function newsByDateAndSlug($year, $month, $day, $slug) {
-		return 'News page!';
-	}
-
 }

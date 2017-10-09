@@ -6,9 +6,10 @@ use FW\View\IViewFactory;
 
 /**
  * @Controller
- * @Route /news
+ * @Route /products
+ * @Authenticate
  */
-class NewsController {
+class ProductsController {
 
 	private $factory;
 
@@ -16,40 +17,38 @@ class NewsController {
 		$this->factory = $factory;
 	}
 
-	public function news() {
+	public function products() {
 		$view = $this->factory::create('template');
 
-		$view->pageTitle = 'News';
+		$view->pageTitle = 'Products';
 
 		$newsList = [];
 
 		foreach (range(1, 10) as $id) {
 			$newsList[] = (object) [
 				'id' => $id,
-				'title' => 'News #' . $id,
+				'title' => 'Products #' . $id,
 				'text' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam accumsan, velit id venenatis blandit, dui sem mattis nulla, non varius nunc purus in nisl. Sed malesuada egestas rutrum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean nec porta nunc, id posuere tortor. Duis vitae mollis sapien, nec egestas nisi. Pellentesque sed consequat mi. Quisque sit amet maximus tortor.'
 			];
 		}
 
 		$view->newsList = $newsList;
 
-		return $view->render('news/home');
+		return $view->render('products/home');
 	}
 
 	/**
 	 * @RequestMap /{id}
 	 */
 	public function newById($id) {
-		return 'News ' . $id . ' page!';
+		return 'products ' . $id . ' page!';
 	}
 
 	/**
 	 * @RequestMethod POST
-	 * @Authenticate
-	 * @Roles [ADMIN]
 	 */
 	public function save() {
-		return 'Saving news!';
+		return 'Saving products!';
 	}
 
 	/**
@@ -57,7 +56,7 @@ class NewsController {
 	 * @RequestMethod DELETE
 	 */
 	public function delete($id) {
-		return 'Deleting news ' . $id . '!';
+		return 'Deleting products ' . $id . '!';
 	}
 
 }

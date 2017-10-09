@@ -6,8 +6,8 @@ $config->set('views-folder', __DIR__ . '/views');
 $config->set('menu', (object) [
 	'groups' => [
 		(object) [
-			'title' => 'Title',
-			'icon' => 'build',
+			'title' => '',
+			'icon' => '',
 			'items' => [
 				(object) [
 					'title' => 'Dashboard',

@@ -33,7 +33,7 @@ class LoginController implements IAuthentication {
 	 * @RequestMap /login
 	 */
 	public function login($returnsTo='') {
-		$view = $this->factory::create('login-template');
+		$view = $this->factory::create();
 
 		$view->styles = ['app/resources/css/login.css'];
 		$view->returnsTo = $returnsTo;
