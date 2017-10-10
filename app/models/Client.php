@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-class User {
+class Client {
 
 	public $id,
 		$name,
 		$email,
-		$pass,
-		$roles,
+		$phone,
+		$address,
+		$registred,
 		$orders;
 
 }

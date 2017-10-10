@@ -69,7 +69,8 @@ class Router {
 				}
 
 				$route .= $map->path;
-				$route = '/^' . preg_replace(['/[\/\/]+/i', '/\//i', '/{(.*?)}/i'], ['/', '\/', '([^\/]+)'], $route) . '\/?$/i';
+				$pattern = '/^' . preg_replace(['/[\/\/]+/i', '/\//i', '/{(.*?)}/i'], ['/', '\/', '([^\/]+)'], $route) . '\/?$/i';
+				$route = preg_replace(['/[\/\/]+/i'], ['/'], $route);
 
 				$parameters = array_map(function($parameter) {
 					return $parameter->getName();
@@ -84,7 +85,7 @@ class Router {
 					'method' => $method->getName(),
 					'parameters' => $parameters,
 					'requestMethods' => $map->requestMethods,
-					'pattern' => $route,
+					'pattern' => $pattern,
 					'requiresAuthentication' => $allRequiresAuth ? true : $map->requiresAuthentication,
 					'roles' => count($roles) ? $roles : $map->roles,
 				];
@@ -203,19 +204,17 @@ class Router {
 	}
 
 	private function findRoute($route, $requestMethod) {
-		$routes = array_filter($this->routes, function($pattern) use ($route) {
-			return preg_match($pattern, $route);
-		}, ARRAY_FILTER_USE_KEY);
+		$routes = [];
 
-		if (count($routes)) {
-			$routes = array_map(function ($route) use ($requestMethod) {
-				if (in_array($requestMethod, $route->requestMethods)) {
-					return $route;
+		foreach ($this->routes as $items) {
+			foreach ($items as $item) {
+				if (preg_match($item->pattern, $route)) {
+					$routes[] = $item;
 				}
-			}, ...array_values($routes));
+			}
 		}
 
-		if (count($routes)) {
+		if (!empty($routes)) {
 			return $routes[0];
 		}
 

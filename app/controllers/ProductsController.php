@@ -18,21 +18,21 @@ class ProductsController {
 	}
 
 	public function products() {
-		$view = $this->factory::create('template');
+		$view = $this->factory::create();
 
 		$view->pageTitle = 'Products';
 
-		$newsList = [];
+		return $view->render('products/home');
+	}
 
-		foreach (range(1, 10) as $id) {
-			$newsList[] = (object) [
-				'id' => $id,
-				'title' => 'Products #' . $id,
-				'text' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam accumsan, velit id venenatis blandit, dui sem mattis nulla, non varius nunc purus in nisl. Sed malesuada egestas rutrum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean nec porta nunc, id posuere tortor. Duis vitae mollis sapien, nec egestas nisi. Pellentesque sed consequat mi. Quisque sit amet maximus tortor.'
-			];
-		}
+	/**
+	 * @RequestMap /form/{id}
+	 */
+	public function form(int $id) {
+		$view = $this->factory::create();
 
-		$view->newsList = $newsList;
+		$view->pageTitle = 'Products';
+		$view->id = $id;
 
 		return $view->render('products/home');
 	}
@@ -40,8 +40,13 @@ class ProductsController {
 	/**
 	 * @RequestMap /{id}
 	 */
-	public function newById($id) {
-		return 'products ' . $id . ' page!';
+	public function newById(int $id) {
+		$view = $this->factory::create();
+
+		$view->pageTitle = 'Products';
+		$view->id = 'none';
+
+		return $view->render('products/home');
 	}
 
 	/**

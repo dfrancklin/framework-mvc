@@ -4,7 +4,11 @@ namespace App\Components;
 
 class MenuComponent {
 
-	private static $config;
+	private static $menu;
+
+	private static $router;
+
+	private static $security;
 
 	private static $templates = [
 		'menu' => '<aside class="menu js-menu"><div class="menu__wrapper js-menu-container bg-dark"><button class="menu__hide js-menu-hide">&times;</button>%s</div></aside>',
@@ -16,21 +20,34 @@ class MenuComponent {
 	];
 
 	public static function render() {
-		$menu = \FW\Core\Config::getInstance()->get('menu');
-
+		self::init();
 		$output = '';
 
-		foreach ($menu->groups as $group) {
+		foreach (self::$menu->groups as $group) {
 			$output .= self::formatGroup($group);
 		}
-		
+
 		echo sprintf(self::$templates['menu'], $output);
 	}
 
+	private static function init() {
+		$dm = \FW\Core\DependenciesManager::getInstance();
+
+		self::$menu = \FW\Core\Config::getInstance()->get('menu');
+		self::$router = \FW\Core\Router::getInstance();
+		self::$security = $dm->resolve(\FW\Security\SecurityService::class);
+	}
+
 	private static function formatGroup($group) {
+		$show = !empty($group->roles) ? self::$security->hasAnyRoles($group->roles) : true;
+
+		if (!$show) {
+			return;
+		}
+
 		$title = '';
 
-		if ($group->icon || $group->title) {
+		if (!empty($group->icon) || !empty($group->title)) {
 			$icon = $group->icon
 					? sprintf(self::$templates['icon'], $group->icon)
 					: '';
@@ -54,33 +71,37 @@ class MenuComponent {
 	}
 
 	private static function formatItem($item) {
-// 		echo '<div style="margin-left: 200px; margin-top: 60px;"><div class="container-fluid">';
-		$dm = \FW\Core\DependenciesManager::getInstance();
-		$router = \FW\Core\Router::getInstance();
-		$security = $dm->resolve(\FW\Security\SecurityService::class);
-
-		$show = !empty($item->roles) ? $security->hasAnyRoles($item->roles) : true;
+		$show = !empty($item->roles) ? self::$security->hasAnyRoles($item->roles) : true;
 		$active = false;
 
 		if (!$show) {
 			return;
 		}
 
+		if (empty($item->activeRoute)) {
+			$item->activeRoute = [];
+		}
+
+		if (!is_array($item->activeRoute)) {
+			$item->activeRoute = [$item->activeRoute];
+		}
+
+		if (!in_array($item->href, $item->activeRoute)) {
+			array_push($item->activeRoute, $item->href);
+		}
+
 		foreach ($item->activeRoute as $route) {
 			$pattern = '/^' . preg_replace(['/[\/\/]+/i', '/\//i', '/([\*]+)/i'], ['/', '\/', '?.*'], $route) . '$/';
-			//vd($router->getActiveRoute(), $pattern, preg_match($pattern, $router->getActiveRoute()));
 
-			if (preg_match($pattern, $router->getActiveRoute())) {
+			if (preg_match($pattern, self::$router->getActiveRoute())) {
 				$active = true;
 				break;
 			}
 		}
 
-// 		vd($router->getActiveRoute() . ' - ' . $show  . ' - ' . $active);
 		$icon = $item->icon
 				? sprintf(self::$templates['icon'], $item->icon)
 				: '';
-// 		echo '</div></div>';
 
 		return sprintf(self::$templates['menu-item'], $item->href, $active ? 'active menu__link--active' : '', $icon, $item->title);
 	}
