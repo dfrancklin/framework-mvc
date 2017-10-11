@@ -18,6 +18,10 @@ class MenuComponent {
 		'menu-item' => '<li class="menu__item nav-item"><a href="%s" class="menu__link nav-link %s">%s%s</a></li>',
 		'icon' => '<span class="material-icons mr-2">%s</span>',
 	];
+	
+	private function __contruct() {
+		
+	}
 
 	public static function render() {
 		self::init();
