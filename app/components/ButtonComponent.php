@@ -2,25 +2,21 @@
 
 namespace App\Components;
 
-class InputComponent implements IComponent {
+class ButtonComponent implements IComponent {
 
 	private $templates = [];
 
-	private $type;
-
-	private $value;
-
 	private $name;
 
-	private $placeholder;
+	private $text;
 
-	private $showLabel;
-
-	private $required;
+	private $type;
 
 	private $size;
 
-	private $width;
+	private $block;
+
+	private $style;
 
 	public function render(bool $print = false) {
 		$input = 'input rendered';

@@ -33,7 +33,7 @@ class HomeController {
 		$view = $this->factory::create();
 
 		$view->pageTitle = 'Dashboard';
-		$view->form = \App\Components\FormComponent::class;
+		$view->form = new \App\Components\FormComponent;
 
 		return $view->render('dashboard');
 	}

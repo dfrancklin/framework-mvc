@@ -2,7 +2,42 @@
 
 <hr>
 
-<?php $this->form::render(); ?>
+<?php
+$this->form->id = 'form-login';
+$this->form->name = 'form-login';
+$this->form->action = '/authentication';
+$this->form->method = 'POST';
+
+$this->form
+		->input([
+			'type' => 'email',
+			'value' => 'dfrancklin23@gmail.com',
+			'name' => 'email',
+			'placeholder' => 'E-mail',
+			'showLabel' => false,
+			'required' => true,
+			'size' => 'l',
+			'width' => '1'
+		])
+		->input([
+			'type' => 'password',
+			'value' => '123',
+			'name' => 'password',
+			'showLabel' => false,
+			'required' => true,
+			'size' => 'l',
+			'width' => '1'
+		])
+		->button([
+			'name' => 'submit',
+			'text' => 'Login',
+			'type' => 'submit',
+			'size' => 'l',
+			'block' => true,
+			'style' => 'dark'
+		])
+		->render();
+?>
 
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lectus arcu, egestas id eleifend quis, consequat ac enim. Etiam mattis, diam non lobortis lacinia, metus ligula accumsan felis, sed porttitor dolor nulla convallis odio. Ut tortor nisl, blandit in arcu sed, porta consequat ipsum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi quis nunc vel dui fringilla ullamcorper. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse mattis nulla ac blandit dapibus. Nulla semper aliquam porta. Suspendisse facilisis, nibh vel rutrum porttitor, ligula odio facilisis ante, sagittis hendrerit enim lectus vel quam. Aliquam elementum id lorem faucibus volutpat. Ut in dictum leo. Sed ligula ipsum, iaculis eu augue in, faucibus aliquam nibh.</p>
 <p>Curabitur vulputate luctus feugiat. Suspendisse eget blandit nisl. Proin non magna sodales quam sollicitudin elementum ac a diam. Curabitur id massa quis sem iaculis interdum eget sit amet ligula. Integer fringilla dictum mauris ac pellentesque. Praesent suscipit lorem a eleifend consectetur. Mauris porta dui magna, et finibus justo fringilla vitae. Donec vel neque faucibus, commodo arcu eu, molestie lacus. Curabitur lobortis, urna in vehicula eleifend, massa mauris tincidunt purus, id rutrum diam dui ut ex. Praesent vitae turpis nec elit sodales porttitor a non eros. Praesent vel fringilla mi, eget suscipit sem. Morbi in fringilla eros.</p>
