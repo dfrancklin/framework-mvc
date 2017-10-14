@@ -25,7 +25,7 @@ class ButtonComponent implements IComponent {
 	const TYPES = ['button', 'reset', 'submit'];
 
 	private $templates = [
-		'button' => '<div class="form-group col"><button type="%s" name="%s" title="%s" class="btn %s %s %s">%s%s</button></div>',
+		'button' => '<button type="%s" name="%s" title="%s" class="component__button btn %s %s %s">%s%s</button>',
 		'icon' => '<span class="material-icons">%s</span>'
 	];
 

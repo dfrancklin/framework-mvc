@@ -4,13 +4,13 @@ namespace App\Components;
 
 class FormComponent implements IComponent {
 
-	private $templates = [
-		'form' => '<form class="row" action="%s" method="%s" name="%s" id="%s">%s</form>'
+	const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
+
+	const TEMPLATES = [
+		'form' => '<form class="row" action="%s" method="%s" name="%s" id="%s">%s%s</form>'
 	];
 
-	private $methods = ['GET', 'POST', 'PUT', 'DELETE'];
-
-	private $components = [
+	const COMPONENTS = [
 		'input' => \App\Components\InputComponent::class,
 		'select' => \App\Components\SelectComponent::class,
 		'uploader' => \App\Components\UploaderComponent::class,
@@ -27,22 +27,10 @@ class FormComponent implements IComponent {
 
 	private $children = [];
 
-	private function method($method) {
-		if (empty($method)) {
-			throw new \Exception('A valid HTTP method "' . $method . '" must be informed');
-		}
-
-		if (!in_array($method, $this->methods)) {
-			throw new \Exception('The HTTP Method "' . $method . '" is invalid');
-		}
-
-		$this->method = $method;
-
-		return $this;
-	}
+	private $buttons = [];
 
 	public function __call(string $method, array $parameters) {
-		if (array_key_exists($method, $this->components)) {
+		if (array_key_exists($method, self::COMPONENTS)) {
 			return $this->add($method, ...$parameters);
 		} else {
 			throw new \Exception('The method "' . $method . '" does not exists on class "' . self::class . '"');
@@ -50,21 +38,43 @@ class FormComponent implements IComponent {
 	}
 
 	private function add(string $type, array $config) {
-		$component = new $this->components[$type];
+		$component = self::COMPONENTS[$type];
+		$component = new $component;
 
 		foreach ($config as $attr => $value) {
 			$component->{$attr} = $value;
 		}
 
-		$this->children[] = $component;
+		if ($component instanceof \App\Components\ButtonComponent) {
+			$this->buttons[] = $component;
+		} else {
+			$this->children[] = $component;
+		}
 
 		return $this;
 	}
 
 	public function render(bool $print = true) {
-		$form = $this->templates['form'];
+		if (empty($this->method)) {
+			$this->method = 'GET';
+		}
 
-		$form = sprintf($form, $this->action, $this->method, $this->name, $this->id, implode("\n", $this->children));
+		if (!in_array($this->method, self::METHODS)) {
+			throw new \Exception('The HTTP Method "' . $method . '" is invalid');
+		}
+		
+		if (!empty($this->buttons)) {
+			array_unshift($this->buttons, '<div class="form-group col">');
+			array_push($this->buttons, '</div>');
+		}
+		
+		$form = sprintf(self::TEMPLATES['form'], 
+											$this->action, 
+											$this->method, 
+											$this->name, 
+											$this->id, 
+											implode("\n", $this->children), 
+											implode("\n", $this->buttons));
 
 		if ($print) {
 			echo $form;
