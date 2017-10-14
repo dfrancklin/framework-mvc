@@ -5,7 +5,7 @@ namespace App\Components;
 class FormComponent implements IComponent {
 
 	private $templates = [
-		'form' => '<form action="%s" method="%s" name="%s" id="%s">%s</form>'
+		'form' => '<form class="row" action="%s" method="%s" name="%s" id="%s">%s</form>'
 	];
 
 	private $methods = ['GET', 'POST', 'PUT', 'DELETE'];
@@ -67,7 +67,7 @@ class FormComponent implements IComponent {
 		$form = sprintf($form, $this->action, $this->method, $this->name, $this->id, implode("\n", $this->children));
 
 		if ($print) {
-			echo htmlspecialchars($form);
+			echo $form;
 		} else {
 			return $form;
 		}

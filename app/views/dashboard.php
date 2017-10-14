@@ -13,11 +13,13 @@ $this->form
 			'type' => 'email',
 			'value' => 'dfrancklin23@gmail.com',
 			'name' => 'email',
-			'placeholder' => 'E-mail',
+			'title' => 'E-mail',
 			'showLabel' => false,
 			'required' => true,
+			'autofocus' => true,
 			'size' => 'l',
-			'width' => '1'
+			'width' => '1/2',
+			'icon' => 'account_circle',
 		])
 		->input([
 			'type' => 'password',
@@ -26,15 +28,29 @@ $this->form
 			'showLabel' => false,
 			'required' => true,
 			'size' => 'l',
-			'width' => '1'
+			'width' => '1/2',
+			'icon' => 'lock',
 		])
 		->button([
 			'name' => 'submit',
-			'text' => 'Login',
+			'title' => 'Login',
 			'type' => 'submit',
-			'size' => 'l',
-			'block' => true,
-			'style' => 'dark'
+			'style' => 'dark',
+			'icon' => 'keyboard_return',
+		])
+		->button([
+			'name' => 'submit2',
+			'title' => 'Login2',
+			'type' => 'submit2',
+			'style' => 'dark',
+			'icon' => 'keyboard_return',
+		])
+		->button([
+			'name' => 'submit3',
+			'title' => 'Login3',
+			'type' => 'submit3',
+			'style' => 'dark',
+			'icon' => 'keyboard_return',
 		])
 		->render();
 ?>
