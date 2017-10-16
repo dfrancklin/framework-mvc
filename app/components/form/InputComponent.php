@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Components;
-/**
- */
+namespace App\Components\Form;
+
+use App\Interfaces\IComponent;
+
 class InputComponent implements IComponent {
 
 	const TYPES = [
@@ -37,11 +38,11 @@ class InputComponent implements IComponent {
 		'1/4' => ' col-md-3 col-12',
 	];
 
-	private $templates = [
-		'form-group' => '<div class="form-group %s">%s%s</div>',
+	const TEMPLATES = [
+		'form-group' => '<div class="form-group%s">%s%s</div>',
 		'label' => '<label%s for="%s">%s:</label>',
 		'input-group' => '<div class="input-group%s">%s%s</div>',
-		'input-group-addon' => '<span class="input-group-addon%s"><span class="material-icons">%s</span></span>',
+		'input-group-addon' => '<span class="input-group-addon text-light%s"><span class="material-icons">%s</span></span>',
 		'input' => '<input type="%s" name="%s" id="%s" placeholder="%s" title="%s" value="%s" class="form-control"%s%s>',
 	];
 
@@ -53,7 +54,7 @@ class InputComponent implements IComponent {
 
 	private $title;
 
-	private $showLabel;
+	private $hideLabel;
 
 	private $required;
 
@@ -77,13 +78,20 @@ class InputComponent implements IComponent {
 
 	private function formatFormGroup() {
 		$inputGroup = $this->formatInputGroup();
-		$label = sprintf($this->templates['label'], (!$this->showLabel ? ' class="sr-only"' : ''), $this->name, $this->title);
+		$label = $this->formatLabel();
 
 		if (empty($this->width) || !array_key_exists($this->width, self::WIDTHS)) {
 			$this->width = '1';
 		}
 
-		return sprintf($this->templates['form-group'], self::WIDTHS[$this->width], $label, $inputGroup);
+		return sprintf(self::TEMPLATES['form-group'], self::WIDTHS[$this->width], $label, $inputGroup);
+	}
+
+	private function formatLabel() {
+		return sprintf(self::TEMPLATES['label'],
+						($this->hideLabel ? ' class="sr-only"' : ''),
+						$this->name,
+						$this->title);
 	}
 
 	private function formatInputGroup() {
@@ -91,7 +99,7 @@ class InputComponent implements IComponent {
 		$icon = '';
 
 		if (!empty($this->icon)) {
-			$icon = sprintf($this->templates['input-group-addon'], null, $this->icon);
+			$icon = sprintf(self::TEMPLATES['input-group-addon'], ' bg-dark', $this->icon);
 		}
 
 		if (empty($this->size) || !array_key_exists($this->size, self::SIZES)) {
@@ -100,7 +108,7 @@ class InputComponent implements IComponent {
 
 		$size = self::SIZES[$this->size];
 
-		return sprintf($this->templates['input-group'], $size, $icon, $input);
+		return sprintf(self::TEMPLATES['input-group'], $size, $icon, $input);
 	}
 
 	private function formatInput() {
@@ -116,7 +124,7 @@ class InputComponent implements IComponent {
 			$this->title = ucfirst($this->name);
 		}
 
-		return sprintf($this->templates['input'],
+		return sprintf(self::TEMPLATES['input'],
 						$this->type,
 						$this->name,
 						$this->name,

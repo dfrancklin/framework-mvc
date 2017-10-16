@@ -1,19 +1,37 @@
 <?php
 
-namespace App\Components;
+namespace App\Components\Form;
 
-class UploaderComponent implements IComponent {
+use App\Interfaces\IComponent;
 
-	private $templates = [];
+class HiddenComponent implements IComponent {
+
+	private $templates = [
+		'input' => '<input type="hidden" name="%s" value="%s">',
+	];
+
+	private $value;
+
+	private $name;
 
 	public function render(bool $print = false) {
-		$input = 'input rendered';
+		$input = $this->formatInput();
 
 		if ($print) {
 			echo $input;
 		} else {
 			return $input;
 		}
+	}
+
+	private function formatInput() {
+		if (empty($this->name)) {
+			throw new \Exception('The name of the input must be informed');
+		}
+
+		return sprintf($this->templates['input'],
+						$this->name,
+						$this->value);
 	}
 
 	public function __get(string $attr) {

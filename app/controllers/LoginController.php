@@ -38,6 +38,7 @@ class LoginController implements IAuthentication {
 		$view->pageTitle = 'Login';
 		$view->styles = ['app/resources/css/login.css'];
 		$view->returnsTo = $returnsTo;
+		$view->form = new \App\Components\FormComponent;
 
 		return $view->render('login/form');
 	}
@@ -53,7 +54,10 @@ class LoginController implements IAuthentication {
 			if (!$user) {
 				$this->message->warning('User does not exists or invalid password');
 			} else {
-				$this->security->authenticate(new UserProfile($user->email, $user->name, $user->roles));
+				$user = new UserProfile($user->email, $user->name, $user->roles);
+				$remember = !empty($_POST['remember-me']) && $_POST['remember-me'] === 'true';
+
+				$this->security->authenticate($user, $remember);
 
 				if ($this->security->isAuthenticated()) {
 					$this->message->success('You are now logged in!');

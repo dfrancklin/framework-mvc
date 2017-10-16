@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Components;
+namespace App\Components\Form;
+
+use App\Interfaces\IComponent;
 
 class ButtonComponent implements IComponent {
 
 	const STYLES = [
-		'primary' => 'btn-primary',
-		'secondary' => 'btn-secondary',
-		'success' => 'btn-success',
-		'danger' => 'btn-danger',
-		'warning' => 'btn-warning',
-		'info' => 'btn-info',
-		'light' => 'btn-light',
-		'dark' => 'btn-dark',
-		'link' => 'btn-link'
+		'primary' => ' btn-primary',
+		'secondary' => ' btn-secondary',
+		'success' => ' btn-success',
+		'danger' => ' btn-danger',
+		'warning' => ' btn-warning',
+		'info' => ' btn-info',
+		'light' => ' btn-light',
+		'dark' => ' btn-dark',
+		'link' => ' btn-link'
 	];
 
 	const SIZES = [
@@ -25,7 +27,7 @@ class ButtonComponent implements IComponent {
 	const TYPES = ['button', 'reset', 'submit'];
 
 	private $templates = [
-		'button' => '<button type="%s" name="%s" title="%s" class="component__button btn %s %s %s">%s%s</button>',
+		'button' => '<button type="%s" name="%s" title="%s" class="component__button btn%s%s%s">%s %s</button>',
 		'icon' => '<span class="material-icons">%s</span>'
 	];
 
@@ -42,6 +44,8 @@ class ButtonComponent implements IComponent {
 	private $style;
 
 	private $icon;
+
+	private $iconOnly;
 
 	public function render(bool $print = false) {
 		$button = $this->formatButton();
@@ -80,6 +84,12 @@ class ButtonComponent implements IComponent {
 			$icon = sprintf($this->templates['icon'], $this->icon);
 		}
 
+		$text = $this->title;
+
+		if ($icon && $this->iconOnly) {
+			$text = sprintf('<span class="sr-only">%s</span>', $this->title);
+		}
+
 		return sprintf($this->templates['button'],
 						$this->type,
 						$this->name,
@@ -87,7 +97,7 @@ class ButtonComponent implements IComponent {
 						self::STYLES[$this->style],
 						self::SIZES[$this->size],
 						($this->block ? ' btn-block' : ''),
-						$this->title,
+						$text,
 						$icon);
 	}
 

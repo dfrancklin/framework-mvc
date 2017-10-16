@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Components;
+namespace App\Components\Form;
 
-class SelectComponent implements IComponent {
+use App\Interfaces\IComponent;
+
+class UploaderComponent implements IComponent {
 
 	private $templates = [];
 
@@ -17,7 +19,7 @@ class SelectComponent implements IComponent {
 	}
 
 	public function __get(string $attr) {
-		if (!property_exists($attr, __CLASS__)) {
+		if (!property_exists(__CLASS__, $attr)) {
 			throw new \Exception('The property "' . $attr . '" does not exists on the class "' . __CLASS__ . '"');
 		}
 
@@ -25,8 +27,8 @@ class SelectComponent implements IComponent {
 	}
 
 	public function __set(string $attr, $value) {
-		if (!property_exists($attr, __CLASS__)) {
-			throw new \Exception('The property "' . $name . '" does not exists on the class ' . __CLASS__);
+		if (!property_exists(__CLASS__, $attr)) {
+			throw new \Exception('The property "' . $attr . '" does not exists on the class "' . __CLASS__ . '"');
 		}
 
 		$this->$attr = $value;

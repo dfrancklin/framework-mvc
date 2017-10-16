@@ -2,8 +2,9 @@
 
 $config = \FW\Core\Config::getInstance();
 
+$config->set('app-id', md5($_SERVER['SERVER_NAME']));
 $config->set('template', 'template');
 $config->set('page-404', 'not-found');
-$config->set('log', __DIR__ . '/logs/' . date('Y-m-d') . '-log-{level}.log');
-$config->set('app-id', md5($_SERVER['SERVER_NAME']));
+$config->set('log-file', __DIR__ . '/logs/' . date('Y-m-d') . '-log-{level}.log');
+$config->set('secret-key', md5('system-secret-key'));
 $config->set('system-folders', [__DIR__ . '/security', __DIR__ . '/view']);

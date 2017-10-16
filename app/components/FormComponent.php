@@ -2,6 +2,8 @@
 
 namespace App\Components;
 
+use App\Interfaces\IComponent;
+
 class FormComponent implements IComponent {
 
 	const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
@@ -11,10 +13,13 @@ class FormComponent implements IComponent {
 	];
 
 	const COMPONENTS = [
-		'input' => \App\Components\InputComponent::class,
-		'select' => \App\Components\SelectComponent::class,
-		'uploader' => \App\Components\UploaderComponent::class,
-		'button' => \App\Components\ButtonComponent::class,
+		'input' => \App\Components\Form\InputComponent::class,
+		'hidden' => \App\Components\Form\HiddenComponent::class,
+		'checkbox' => \App\Components\Form\CheckboxComponent::class,
+		'radio' => \App\Components\Form\RadioComponent::class,
+		'select' => \App\Components\Form\SelectComponent::class,
+		'uploader' => \App\Components\Form\UploaderComponent::class,
+		'button' => \App\Components\Form\ButtonComponent::class,
 	];
 
 	private $action;
@@ -45,7 +50,7 @@ class FormComponent implements IComponent {
 			$component->{$attr} = $value;
 		}
 
-		if ($component instanceof \App\Components\ButtonComponent) {
+		if (get_class($component) === self::COMPONENTS['button']) {
 			$this->buttons[] = $component;
 		} else {
 			$this->children[] = $component;
@@ -60,21 +65,21 @@ class FormComponent implements IComponent {
 		}
 
 		if (!in_array($this->method, self::METHODS)) {
-			throw new \Exception('The HTTP Method "' . $method . '" is invalid');
+			throw new \Exception('The HTTP Method "' . $this->method . '" is invalid');
 		}
-		
+
 		if (!empty($this->buttons)) {
-			array_unshift($this->buttons, '<div class="form-group col">');
+			array_unshift($this->buttons, '<div class="col component__group-buttons">');
 			array_push($this->buttons, '</div>');
 		}
-		
-		$form = sprintf(self::TEMPLATES['form'], 
-											$this->action, 
-											$this->method, 
-											$this->name, 
-											$this->id, 
-											implode("\n", $this->children), 
-											implode("\n", $this->buttons));
+
+		$form = sprintf(self::TEMPLATES['form'],
+						$this->action,
+						$this->method,
+						$this->name,
+						$this->id,
+						implode('', $this->children),
+						implode('', $this->buttons));
 
 		if ($print) {
 			echo $form;

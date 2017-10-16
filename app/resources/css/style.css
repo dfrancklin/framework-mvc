@@ -40,32 +40,32 @@ html, body {
 
 /*---------------------------*/
 .menu {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	pointer-events: none;
 	z-index: 1030;
 }
 
 .menu--visible {
-  pointer-events: auto;
+	pointer-events: auto;
 }
 
 .menu::before {
-  content: '';
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
-  opacity: 0;
-  will-change: opacity;
-  transition: opacity 0.3s cubic-bezier(0,0,0.3,1);
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
+	opacity: 0;
+	will-change: opacity;
+	transition: opacity 0.3s cubic-bezier(0,0,0.3,1);
 }
 
 .menu__wrapper {
@@ -83,19 +83,19 @@ html, body {
 }
 
 .menu--animatable .menu__wrapper {
-  transition: transform 0.13s cubic-bezier(0,0,0.3,1);
+	transition: transform 0.13s cubic-bezier(0,0,0.3,1);
 }
 
 .menu--visible.menu--animatable .menu__wrapper {
-  transition: transform 0.33s cubic-bezier(0,0,0.3,1);
+	transition: transform 0.33s cubic-bezier(0,0,0.3,1);
 }
 
 .menu--visible::before {
-  opacity: 1;
+	opacity: 1;
 }
 
 .menu--visible .menu__wrapper {
-  transform: none;
+	transform: none;
 }
 
 .menu__hide {
@@ -147,6 +147,12 @@ html, body {
 	right: 0;
 	bottom: 0;
 	left: 0;
+	font-size: small;
+}
+
+.main__footer p {
+	line-height: 56px;
+	margin: 0;
 }
 
 /*---------------------------*/
@@ -164,37 +170,66 @@ html, body {
 
 /*---------------------------*/
 .material-icons {
-    line-height: 1.1;
-	font-size: 90%
+    line-height: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    font-style: inherit;
+    letter-spacing: inherit;
+    white-space: inherit;
+    word-wrap: inherit;
+    vertical-align: bottom;
 }
-
-#messages-container .alert {}
 
 /*---------------------------*/
 @media (min-width: 992px) {
 	.menu + .main {
 		margin-left: 250px;
 	}
-	
+
 	.menu__wrapper {
 		top: 56px;
-    transform: translateX(0);
+		transform: translateX(0);
 		pointer-events: auto;
 	}
-	
+
 	.menu__hide {
 		display: none;
 	}
-	
+
 	.menu__hide + .menu__group {
 		margin-top: 10px;
 	}
-	
+
 	.menu--visible {
 		pointer-events: none;
 	}
-	
+
 	.menu--visible::before {
 		opacity: 0;
 	}
+}
+
+/*---------------------------*/
+.component__group-buttons {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.component__button {
+	margin-left: 15px;
+	margin-top: 0 !important;
+	flex: 0 0 0;
+}
+
+.component__button:first-of-type {
+	margin-left: 0;
+}
+
+.component__button.btn-block {
+	flex: 1;
+}
+
+/*---------------------------*/
+.input-group-lg > select.form-control {
+	height: calc(2.9rem + 2px) !important;
 }

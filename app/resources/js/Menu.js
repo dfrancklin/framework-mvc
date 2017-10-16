@@ -1,8 +1,14 @@
 class Menu {
-  constructor () {
+
+  constructor() {
+    this.menuEl = document.querySelector('.js-menu');
+
+    if (!this.menuEl) {
+      return;
+    }
+
     this.showButtonEl = document.querySelector('.js-menu-show');
     this.hideButtonEl = document.querySelector('.js-menu-hide');
-    this.menuEl = document.querySelector('.js-menu');
     this.menuContainerEl = document.querySelector('.js-menu-container');
     // Control whether the container's children can be focused
     // Set initial state to inert since the drawer is offscreen
@@ -30,26 +36,28 @@ class Menu {
   }
 
   // apply passive event listening if it's supported
-  applyPassive () {
+  applyPassive() {
     if (this.supportsPassive !== undefined) {
       return this.supportsPassive ? { passive: true } : false;
     }
-    
+
     // feature detect
     let isSupported = false;
-    
+
     try {
-      document.addEventListener('test', null, { get passive () {
-        isSupported = true;
-      }});
+      document.addEventListener('test', null, {
+        get passive() {
+          isSupported = true;
+        }
+      });
     } catch (e) { }
-    
+
     this.supportsPassive = isSupported;
-    
+
     return this.applyPassive();
   }
 
-  addEventListeners () {
+  addEventListeners() {
     this.showButtonEl.addEventListener('click', this.showMenu);
     this.hideButtonEl.addEventListener('click', this.hideMenu);
     this.menuEl.addEventListener('click', this.hideMenu);
@@ -60,7 +68,7 @@ class Menu {
     this.menuEl.addEventListener('touchend', this.onTouchEnd);
   }
 
-  onTouchStart (evt) {
+  onTouchStart(evt) {
     if (!this.menuEl.classList.contains('menu--visible'))
       return;
 
@@ -71,14 +79,14 @@ class Menu {
     requestAnimationFrame(this.update);
   }
 
-  onTouchMove (evt) {
+  onTouchMove(evt) {
     if (!this.touchingMenu)
       return;
 
     this.currentX = evt.touches[0].pageX;
   }
 
-  onTouchEnd (evt) {
+  onTouchEnd(evt) {
     if (!this.touchingMenu)
       return;
 
@@ -92,7 +100,7 @@ class Menu {
     }
   }
 
-  update () {
+  update() {
     if (!this.touchingMenu)
       return;
 
@@ -102,12 +110,12 @@ class Menu {
     this.menuContainerEl.style.transform = `translateX(${translateX}px)`;
   }
 
-  blockClicks (evt) {
+  blockClicks(evt) {
     evt.stopPropagation();
   }
 
-  onTransitionEnd (evt) {
-    if (evt.propertyName != this.transitionEndProperty && evt.elapsedTime!= this.transitionEndTime){
+  onTransitionEnd(evt) {
+    if (evt.propertyName != this.transitionEndProperty && evt.elapsedTime != this.transitionEndTime) {
       return;
     }
 
@@ -118,19 +126,19 @@ class Menu {
     this.menuEl.removeEventListener('transitionend', this.onTransitionEnd);
   }
 
-  showMenu () {
+  showMenu() {
     this.menuEl.classList.add('menu--animatable');
     this.menuEl.classList.add('menu--visible');
     this.detabinator.inert = false;
 
     this.transitionEndProperty = 'transform';
     // the duration of transition (make unique to distinguish transitions )
-    this.transitionEndTime = 0.33; 
+    this.transitionEndTime = 0.33;
 
     this.menuEl.addEventListener('transitionend', this.onTransitionEnd);
   }
 
-  hideMenu () {
+  hideMenu() {
     this.menuEl.classList.add('menu--animatable');
     this.menuEl.classList.remove('menu--visible');
     this.detabinator.inert = true;

@@ -69,12 +69,16 @@ class SecurityService implements ISecurityService {
 		return false;
 	}
 
-	public function authenticate(UserProfile $userProfile) : bool {
+	public function authenticate(UserProfile $userProfile, bool $remember) : bool {
 		if (session_status() !== PHP_SESSION_ACTIVE || session_id() === '') {
 			return false;
 		}
 
 		$_SESSION[$this->appId]['user-profile'] = serialize($userProfile);
+
+		if ($remember) {
+
+		}
 
 		return true;
 	}

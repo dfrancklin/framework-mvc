@@ -10,7 +10,7 @@ interface ISecurityService {
 
 	public function hasRoles(array $roles);
 
-	public function authenticate(UserProfile $userProfile) : bool;
+	public function authenticate(UserProfile $userProfile, bool $remember) : bool;
 
 	public function logout();
 
