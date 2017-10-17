@@ -23,7 +23,7 @@ html, body {
 	right: 10px;
 	bottom: 0;
 	height: 100%;
-	padding: 10px 0;
+	padding: 56px 0 40px;
 	pointer-events: none;
 	display: flex;
 	align-items: flex-end;
