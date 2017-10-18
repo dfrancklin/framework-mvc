@@ -27,11 +27,11 @@ class UserRepository implements IUserRepository {
 	private function createUser(array $info) : User {
 		$user = new User;
 
-		$user->id = $info['id'];
-		$user->name = $info['name'];
-		$user->email = $info['email'];
-		$user->pass = $info['pass'];
-		$user->roles = $info['roles'];
+		$properties = ['id', 'name', 'email', 'pass', 'roles'];
+
+		foreach ($properties as $property) {
+			$user->{$property} = $info[$property];
+		}
 
 		return $user;
 	}

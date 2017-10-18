@@ -2,7 +2,12 @@
 
 namespace App\Controllers;
 
+use FW\Core\Router;
+use FW\Core\FlashMessages;
 use FW\View\IViewFactory;
+
+use App\Interfaces\IProductService;
+use App\Components\FormComponent;
 
 /**
  * @Controller
@@ -13,14 +18,29 @@ class ProductsController {
 
 	private $factory;
 
-	public function __construct(IViewFactory $factory) {
+	private $service;
+
+	private $message;
+
+	public function __construct(IViewFactory $factory, IProductService $service) {
 		$this->factory = $factory;
+		$this->service = $service;
+		$this->message = FlashMessages::getInstance();
 	}
 
 	public function products() {
-		$view = $this->factory::create();
+		$quantity = 10;
+		$page = $_GET['page'] ?? 1;
+		$offset = ($page - 1) * $quantity;
+		$products = $this->service->page($offset, $quantity);
 
+		if (empty($products) && $page != 1) {
+			Router::redirect('/products');
+		}
+
+		$view = $this->factory::create();
 		$view->pageTitle = 'Products';
+		$view->products = $products;
 
 		return $view->render('products/home');
 	}
@@ -28,25 +48,22 @@ class ProductsController {
 	/**
 	 * @RequestMap /form/{id}
 	 */
-	public function form(int $id) {
-		$view = $this->factory::create();
+	public function edit(int $id) {
+		$product = $this->service->byId($id);
 
-		$view->pageTitle = 'Products';
-		$view->id = $id;
-
-		return $view->render('products/home');
+		if ($product) {
+			$this->form($product);
+		} else {
+			$this->message->error('No product with the ID ' . $id . ' was found!');
+			Router::redirect('/products');
+		}
 	}
 
 	/**
-	 * @RequestMap /{id}
+	 * @RequestMap /form
 	 */
-	public function newById(int $id) {
-		$view = $this->factory::create();
-
-		$view->pageTitle = 'Products';
-		$view->id = 'none';
-
-		return $view->render('products/home');
+	public function create() {
+		return $this->form();
 	}
 
 	/**
@@ -62,6 +79,16 @@ class ProductsController {
 	 */
 	public function delete($id) {
 		return 'Deleting products ' . $id . '!';
+	}
+
+	private function form($product = null) {
+		$view = $this->factory::create();
+
+		$view->pageTitle = 'Products';
+		$view->product = $product;
+		$view->form = new FormComponent;
+
+		return $view->render('products/form');
 	}
 
 }

@@ -36,6 +36,10 @@ class Router {
 	public function register($class) {
 		$reflection = new \ReflectionClass($class);
 
+		if ($reflection->isAbstract()) {
+			throw new \Exception('The class ' . $class . ' cannot be abstract');
+		}
+
 		$root = '/';
 		$allRequiresAuth = false;
 		$roles = [];
@@ -59,7 +63,7 @@ class Router {
 		}
 
 		foreach($reflection->getMethods() as $method) {
-			if (!$method->isConstructor() && $method->isPublic()) {
+			if (!$method->isConstructor() && !$method->isStatic() && $method->isPublic()) {
 				$map = $this->resolveMethod($method);
 
 				$route = $root;
