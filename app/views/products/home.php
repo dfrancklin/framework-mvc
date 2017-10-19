@@ -1,6 +1,6 @@
 <h1>
 	<?=$pageTitle?>
-	<a href="/products/form" class="btn btn-sm btn-primary">
+	<a href="/products/form" class="btn btn-primary">
 		<span class="material-icons">add_circle</span> New
 	</a>
 </h1>

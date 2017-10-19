@@ -18,6 +18,7 @@ class FormComponent implements IComponent {
 		'checkbox' => \App\Components\Form\CheckboxComponent::class,
 		'radio' => \App\Components\Form\RadioComponent::class,
 		'select' => \App\Components\Form\SelectComponent::class,
+		'text' => \App\Components\Form\TextAreaComponent::class,
 		'uploader' => \App\Components\Form\UploaderComponent::class,
 		'button' => \App\Components\Form\ButtonComponent::class,
 	];

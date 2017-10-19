@@ -52,7 +52,7 @@ class ProductsController {
 		$product = $this->service->byId($id);
 
 		if ($product) {
-			$this->form($product);
+			return $this->form($product);
 		} else {
 			$this->message->error('No product with the ID ' . $id . ' was found!');
 			Router::redirect('/products');
@@ -70,6 +70,7 @@ class ProductsController {
 	 * @RequestMethod POST
 	 */
 	public function save() {
+		vd($_POST);
 		return 'Saving products!';
 	}
 

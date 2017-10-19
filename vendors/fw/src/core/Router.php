@@ -218,14 +218,20 @@ class Router {
 			}
 		}
 
-		if (!empty($routes)) {
-			return $routes[0];
+		if (empty($routes)) {
+			return;
 		}
 
-		return;
+		foreach ($routes as $route) {
+			if (in_array($requestMethod, $route->requestMethods)) {
+				return $route;
+			}
+		}
+
+		throw new \Exception('HTTP Method "' . $requestMethod . '" not allowed on route "' . $route . '"');
 	}
 
-	private function notFoundHandler($route) {
+	private function notFoundHandler($route, $requestMethod) {
 		$factory = $this->dm->resolve(IViewFactory::class);
 		$view = $factory::create();
 

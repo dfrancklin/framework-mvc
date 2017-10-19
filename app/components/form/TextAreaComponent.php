@@ -4,7 +4,7 @@ namespace App\Components\Form;
 
 use App\Interfaces\IComponent;
 
-class SelectComponent implements IComponent {
+class TextAreaComponent implements IComponent {
 
 	const SIZES = [
 		's' => ' input-group-sm',
@@ -23,18 +23,16 @@ class SelectComponent implements IComponent {
 		'form-group' => '<div class="form-group%s">%s%s</div>',
 		'label' => '<label%s for="%s">%s:</label>',
 		'input-group' => '<div class="input-group%s">%s%s</div>',
-		'input-group-addon' => '<span class="input-group-addon text-light%s"><span class="material-icons">%s</span></span>',
-		'select' => '<select name="%s" id="%s" title="%s" class="form-control component__select"%s%s>%s</select>',
-		'option' => '<option value="%s"%s>%s</option>',
+		'textarea' => '<textarea name="%s" id="%s" placeholder="%s" title="%s" class="form-control component__textarea"%s%s>%s</textarea>',
 	];
+
+	private $type;
+
+	private $value;
 
 	private $name;
 
 	private $title;
-
-	private $options;
-
-	private $selected;
 
 	private $hideLabel;
 
@@ -45,8 +43,6 @@ class SelectComponent implements IComponent {
 	private $size;
 
 	private $width;
-
-	private $icon;
 
 	public function render(bool $print = false) {
 		$input = $this->formatFormGroup();
@@ -77,7 +73,7 @@ class SelectComponent implements IComponent {
 	}
 
 	private function formatInputGroup() {
-		$input = $this->formatSelect();
+		$input = $this->formatTextArea();
 		$icon = '';
 
 		if (!empty($this->icon)) {
@@ -93,41 +89,23 @@ class SelectComponent implements IComponent {
 		return sprintf(self::TEMPLATES['input-group'], $size, $icon, $input);
 	}
 
-	private function formatSelect() {
+	private function formatTextArea() {
 		if (empty($this->name)) {
-			throw new \Exception('The name of the select must be informed');
+			throw new \Exception('The name of the input must be informed');
 		}
 
 		if (empty($this->title)) {
 			$this->title = ucfirst($this->name);
 		}
 
-		$options = $this->formatOptions();
-
-		return sprintf(self::TEMPLATES['select'],
+		return sprintf(self::TEMPLATES['textarea'],
 						$this->name,
 						$this->name,
 						$this->title,
+						$this->title,
 						($this->required ? ' required' : null),
 						($this->autofocus ? ' autofocus' : null),
-						$options);
-	}
-
-	private function formatOptions() {
-		if (empty($this->options)) {
-			throw new \Exception('The options of the select must be informed');
-		}
-
-		$options = '';
-
-		foreach ($this->options as $key => $value) {
-			$options .= sprintf(self::TEMPLATES['option'],
-									$key,
-									($this->selected === $key ? 'selected' : ''),
-									$value);
-		}
-
-		return $options;
+						$this->value);
 	}
 
 	public function __get(string $attr) {

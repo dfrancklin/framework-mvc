@@ -31,7 +31,7 @@ class ProductRepository implements IProductRepository {
 	}
 
 	public function byId($id) {
-		return;
+		return self::$table[$id - 1];
 	}
 
 	public function save($product) {

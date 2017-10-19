@@ -24,10 +24,11 @@ class ButtonComponent implements IComponent {
 		'l' => ' btn-lg'
 	];
 
-	const TYPES = ['button', 'reset', 'submit'];
+	const TYPES = ['button', 'reset', 'submit', 'link'];
 
 	private $templates = [
 		'button' => '<button type="%s" name="%s" title="%s" class="component__button btn%s%s%s">%s %s</button>',
+		'link' => '<a href="%s" name="%s" title="%s" class="component__button btn%s%s%s">%s %s</a>',
 		'icon' => '<span class="material-icons">%s</span>'
 	];
 
@@ -36,6 +37,8 @@ class ButtonComponent implements IComponent {
 	private $title;
 
 	private $type;
+
+	private $action;
 
 	private $size;
 
@@ -90,15 +93,27 @@ class ButtonComponent implements IComponent {
 			$text = sprintf('<span class="sr-only">%s</span>', $this->title);
 		}
 
-		return sprintf($this->templates['button'],
-						$this->type,
-						$this->name,
-						$this->title,
-						self::STYLES[$this->style],
-						self::SIZES[$this->size],
-						($this->block ? ' btn-block' : ''),
-						$text,
-						$icon);
+		if ($this->type === 'link' && !empty($this->action)) {
+			return sprintf($this->templates['link'],
+							$this->action,
+							$this->name,
+							$this->title,
+							self::STYLES[$this->style],
+							self::SIZES[$this->size],
+							($this->block ? ' btn-block' : ''),
+							$text,
+							$icon);
+		} else {
+			return sprintf($this->templates['button'],
+							$this->type,
+							$this->name,
+							$this->title,
+							self::STYLES[$this->style],
+							self::SIZES[$this->size],
+							($this->block ? ' btn-block' : ''),
+							$text,
+							$icon);
+		}
 	}
 
 	public function __get(string $attr) {

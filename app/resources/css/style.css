@@ -221,7 +221,7 @@ html, body {
 	flex: 0 0 0;
 }
 
-.component__button:first-of-type {
+.component__button:first-child {
 	margin-left: 0;
 }
 
@@ -229,7 +229,12 @@ html, body {
 	flex: 1;
 }
 
-/*---------------------------*/
-.input-group-lg > select.form-control {
+.input-group-lg > .component__select {
 	height: calc(2.9rem + 2px) !important;
 }
+
+.component__textarea {
+	height: 150px;
+}
+
+/*---------------------------*/
