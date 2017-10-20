@@ -1,7 +1,7 @@
 <h1>
 	<?=$pageTitle?>
 	<a href="/products/form" class="btn btn-primary">
-		<span class="material-icons">add_circle</span> New
+		New <span class="material-icons">add_circle</span>
 	</a>
 </h1>
 
@@ -25,15 +25,66 @@
 				<td><?=$product->quantity?></td>
 				<td>
 					<a href="/products/form/<?=$product->id?>" class="btn btn-sm btn-success">
-						<span class="material-icons">edit</span> Edit
+						Edit <span class="material-icons">edit</span>
 					</a>
-					<a href="#" class="btn btn-sm btn-danger">
-						<span class="material-icons">delete</span> Delete
-					</a>
+					<button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirm-modal" data-id="<?=$product->id?>">
+						Delete <span class="material-icons">delete</span>
+					</button>
 				</td>
 			</tr>
 		<?php endforeach; ?>
 	</tbody>
 </table>
 
-pages
+<?php if ($this->pages > 1) : ?>
+	<nav aria-label="Page navigation">
+		<ul class="pagination justify-content-center">
+			<li class="page-item<?=($this->page === 1 ? ' disabled' : '')?>">
+				<a class="page-link" href="/products?page=<?=$this->page - 1?>" tabindex="-1">Previous</a>
+			</li>
+
+			<?php foreach (range(1, $this->pages) as $value) : ?>
+				<li class="page-item<?=($this->page === $value ? ' active' : '')?>">
+					<a class="page-link" href="/products?page=<?=$value?>">
+						<?=$value?>
+						<?php if ($this->page === $value) : ?>
+							<span class="sr-only">(current)</span>
+						<?php endif; ?>
+					</a>
+				</li>
+			<?php endforeach; ?>
+
+			<li class="page-item<?=($this->page === $this->pages ? ' disabled' : '')?>">
+				<a class="page-link" href="/products?page=<?=$this->page + 1?>">Next</a>
+			</li>
+		</ul>
+	</nav>
+<?php endif; ?>
+
+<div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-modal-label" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="confirm-modal-label">Are you sure?</h5>
+
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<div class="modal-body">
+				<p>Are you sure that you want to delete this item permanently?</p>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+				<form method="POST" id="confirm-form">
+					<button type="submit" class="btn btn-danger">
+						Delete <span class="material-icons">delete</span>
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

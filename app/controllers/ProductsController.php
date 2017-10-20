@@ -6,6 +6,7 @@ use FW\Core\Router;
 use FW\Core\FlashMessages;
 use FW\View\IViewFactory;
 
+use App\Models\Product;
 use App\Interfaces\IProductService;
 use App\Components\FormComponent;
 
@@ -41,6 +42,8 @@ class ProductsController {
 		$view = $this->factory::create();
 		$view->pageTitle = 'Products';
 		$view->products = $products;
+		$view->page = (int) $page;
+		$view->pages = $this->service->totalPages($quantity);
 
 		return $view->render('products/home');
 	}
@@ -70,26 +73,57 @@ class ProductsController {
 	 * @RequestMethod POST
 	 */
 	public function save() {
-		vd($_POST);
-		return 'Saving products!';
+		$product = $this->createProduct($_POST);
+		$product = $this->service->save($product);
+
+		if ($product) {
+			$this->message->info('Product saved!');
+		} else {
+			$this->message->error('A problem occurred while saving the product!');
+		}
+
+		Router::redirect('/products');
 	}
 
 	/**
-	 * @RequestMap /{id}
-	 * @RequestMethod DELETE
+	 * @RequestMap /delete/{id}
+	 * @RequestMethod POST
 	 */
 	public function delete($id) {
-		return 'Deleting products ' . $id . '!';
+		if ($this->service->delete($id)) {
+			$this->message->info('Product deleted!');
+		} else {
+			$this->message->error('A problem occurred while deleting the product!');
+		}
+
+		Router::redirect('/products');
 	}
 
 	private function form($product = null) {
 		$view = $this->factory::create();
 
-		$view->pageTitle = 'Products';
+		$view->pageTitle = (is_null($product) ? 'New' : 'Update') . ' Product';
 		$view->product = $product;
 		$view->form = new FormComponent;
 
 		return $view->render('products/form');
+	}
+
+	private function createProduct(array $info) : Product {
+		$properties = ['id', 'name', 'description', 'picture', 'price', 'quantity'];
+		$product = new Product;
+
+		foreach ($properties as $property) {
+			if (isset($info[$property])) {
+				if (is_numeric($info[$property])) {
+					$product->{$property} = $info[$property] + 0;
+				} else {
+					$product->{$property} = $info[$property];
+				}
+			}
+		}
+
+		return $product;
 	}
 
 }

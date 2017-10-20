@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Product;
 use App\Interfaces\IProductService;
 use App\Interfaces\IProductRepository;
 
@@ -16,24 +17,30 @@ class ProductService implements IProductService {
 		$this->repository = $repository;
 	}
 
-	public function all() {
+	public function all() : array {
 		return $this->repository->all();
 	}
 
-	public function page($offset, $quantity) {
+	public function page(int $offset, int $quantity) : array {
 		return $this->repository->page($offset, $quantity);
 	}
 
-	public function byId($id) {
+	public function byId(int $id) : ?Product {
 		return $this->repository->byId($id);
 	}
 
-	public function save($product) {
+	public function save(Product $product) : ?Product {
 		return $this->repository->save($product);
 	}
 
-	public function delete($id) {
+	public function delete(int $id) : bool {
 		return $this->repository->delete($id);
+	}
+
+	public function totalPages(int $quantity) : int {
+		$total = $this->repository->total();
+
+		return ceil($total / $quantity);
 	}
 
 }

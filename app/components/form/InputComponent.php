@@ -43,7 +43,7 @@ class InputComponent implements IComponent {
 		'label' => '<label%s for="%s">%s:</label>',
 		'input-group' => '<div class="input-group%s">%s%s</div>',
 		'input-group-addon' => '<span class="input-group-addon text-light%s"><span class="material-icons">%s</span></span>',
-		'input' => '<input type="%s" name="%s" id="%s" placeholder="%s" title="%s" value="%s" class="form-control"%s%s>',
+		'input' => '<input type="%s" name="%s" id="%s" placeholder="%s" title="%s" value="%s" class="form-control"%s%s%s>',
 	];
 
 	private $type;
@@ -65,6 +65,8 @@ class InputComponent implements IComponent {
 	private $width;
 
 	private $icon;
+
+	private $additional;
 
 	public function render(bool $print = false) {
 		$input = $this->formatFormGroup();
@@ -124,6 +126,14 @@ class InputComponent implements IComponent {
 			$this->title = ucfirst($this->name);
 		}
 
+		$additional = '';
+
+		if (!empty($this->additional) && is_array($this->additional)) {
+			foreach ($this->additional as $property => $value) {
+				$additional .= sprintf(' %s="%s"', $property, $value);
+			}
+		}
+
 		return sprintf(self::TEMPLATES['input'],
 						$this->type,
 						$this->name,
@@ -132,7 +142,8 @@ class InputComponent implements IComponent {
 						$this->title,
 						$this->value,
 						($this->required ? ' required' : null),
-						($this->autofocus ? ' autofocus' : null));
+						($this->autofocus ? ' autofocus' : null),
+						$additional);
 	}
 
 	public function __get(string $attr) {

@@ -2,16 +2,20 @@
 
 namespace App\Interfaces;
 
+use App\Models\Product;
+
 interface IProductRepository {
 
-	function all();
+	public function all() : array;
 
-	function page($offset, $quantity);
+	public function page(int $offset, int $quantity) : array;
 
-	function byId($id);
+	public function byId(int $id) : ?Product;
 
-	function save($product);
+	public function save(Product $product) : ?Product;
 
-	function delete($id);
+	public function delete(int $id) : bool;
+
+	public function total() : int;
 
 }

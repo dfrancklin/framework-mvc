@@ -2,23 +2,18 @@
 
 namespace App\Controllers;
 
-use \App\Interfaces\IHomeService;
 use \FW\View\IViewFactory;
 
 /**
  * @Controller
  * @Route /
  * @Authenticate
- * @Roles [ADMIN,USER]
  */
 class HomeController {
 
-	private $service;
-
 	private $factory;
 
-	public function __construct(IHomeService $service, IViewFactory $factory) {
-		$this->service = $service;
+	public function __construct(IViewFactory $factory) {
 		$this->factory = $factory;
 	}
 

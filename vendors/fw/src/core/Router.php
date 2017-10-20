@@ -207,12 +207,12 @@ class Router {
 		echo $controller->{$map->method}(...$matches);
 	}
 
-	private function findRoute($route, $requestMethod) {
+	private function findRoute($address, $requestMethod) {
 		$routes = [];
 
 		foreach ($this->routes as $items) {
 			foreach ($items as $item) {
-				if (preg_match($item->pattern, $route)) {
+				if (preg_match($item->pattern, $address)) {
 					$routes[] = $item;
 				}
 			}
@@ -228,7 +228,7 @@ class Router {
 			}
 		}
 
-		throw new \Exception('HTTP Method "' . $requestMethod . '" not allowed on route "' . $route . '"');
+		throw new \Exception('HTTP Method "' . $requestMethod . '" not allowed on route "' . $address . '"');
 	}
 
 	private function notFoundHandler($route, $requestMethod) {

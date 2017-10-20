@@ -74,7 +74,6 @@ class FlashMessages {
 		}
 
 		$_SESSION[$this->appId][$this->id][$type][] = (object) [
-			'id' => ++$this->last,
 			'title' => $title,
 			'text' => $text,
 		];

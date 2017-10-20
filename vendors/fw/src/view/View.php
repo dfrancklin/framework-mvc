@@ -14,7 +14,7 @@ class View {
 	private $security;
 
 	private $template;
-	
+
 	private $messages;
 
 	private $views;
@@ -31,7 +31,7 @@ class View {
 		if (!array_key_exists($name, $this->data)) {
 			throw new \Exception('A variable "' . $name . '" was not defined on the view');
 		}
-		
+
 		return $this->data[$name];
 	}
 
@@ -39,15 +39,15 @@ class View {
 		$this->data[$name] = $value;
 	}
 
-	public function render($page) {
-		$template = $this->views . '/' . $this->template . '.php';
-		if (!file_exists($template)) {
-			throw new \Exception('Template file "' . $template . '" does not exists!');
+	public function render($__view) {
+		$__template = $this->views . '/' . $this->template . '.php';
+		if (!file_exists($__template)) {
+			throw new \Exception('Template file "' . $__template . '" does not exists!');
 		}
 
-		$page = $this->views . '/' . $page . '.php';
-		if (!file_exists($page)) {
-			throw new \Exception('Page file "' . $page . '" does not exists!');
+		$__view = $this->views . '/' . $__view . '.php';
+		if (!file_exists($__view)) {
+			throw new \Exception('Page file "' . $__view . '" does not exists!');
 		}
 
 		if (count($this->data)) {
@@ -55,18 +55,18 @@ class View {
 		}
 
 		ob_start();
-		require $page;
-		$content = ob_get_contents();
+		require $__view;
+		$__content = ob_get_contents();
 		ob_clean();
 
 		ob_start();
-		require $template;
-		$total = ob_get_contents();
+		require $__template;
+		$__fullPage = ob_get_contents();
 		ob_clean();
 
-		list($head, $foot) = preg_split('/<!--\s?content\s?-->/i', $total);
+		list($__head, $__foot) = preg_split('/<!--\s?content\s?-->/i', $__fullPage);
 
-		return $head . $content . $foot;
+		return $__head . $__content . $__foot;
 	}
 
 }
