@@ -63,7 +63,7 @@ class SecurityService implements ISecurityService {
 		// Unserialize profile
 		$userProfile = unserialize($userProfile);
 
-		if ($userProfile) {
+		if ($userProfile && $userProfile instanceof UserProfile) {
 			return $this->authenticate($userProfile, true);
 		}
 
