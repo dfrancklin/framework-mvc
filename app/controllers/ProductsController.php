@@ -30,7 +30,7 @@ class ProductsController {
 	}
 
 	public function products() {
-		$quantity = 9;
+		$quantity = 10;
 		$page = $_GET['page'] ?? 1;
 		$offset = ($page - 1) * $quantity;
 		$products = $this->service->page($offset, $quantity);
