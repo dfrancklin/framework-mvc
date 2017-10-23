@@ -238,3 +238,62 @@ html, body {
 }
 
 /*---------------------------*/
+.component__uploader .progress {
+	opacity: 0;
+	display: none;
+}
+
+.component__uploader .progress.loading {
+	display: block;
+	opacity: 1;
+}
+
+.component__uploader img {
+	max-width: 100%;
+	max-height: 93px;
+}
+
+.component__uploader p {
+	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.component__uploader .custom-file {
+	width: 100%;
+}
+
+.component__uploader .drop-zone {
+	border: 2px dashed #bbb;
+	border-radius: 5px;
+	padding: 25px;
+	text-align: center;
+	font-size: 20pt;
+	font-weight: bold;
+	color: #bbb;
+}
+
+.component__uploader .input-group {
+    display: none;
+}
+
+
+.component__uploader .previewer {
+    margin: 0 0 15px;
+    text-align: center;
+    /* display: none; */
+}
+
+td img {
+    max-width: 100%;
+    max-height: 50px;
+}
+
+.component__table .image-cell {
+    text-align: center;
+}
+
+.pagination {
+    flex-wrap: wrap;
+}

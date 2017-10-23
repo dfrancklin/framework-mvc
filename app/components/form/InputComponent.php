@@ -79,8 +79,8 @@ class InputComponent implements IComponent {
 	}
 
 	private function formatFormGroup() {
-		$inputGroup = $this->formatInputGroup();
 		$label = $this->formatLabel();
+		$inputGroup = $this->formatInputGroup();
 
 		if (empty($this->width) || !array_key_exists($this->width, self::WIDTHS)) {
 			$this->width = '1';
@@ -90,6 +90,10 @@ class InputComponent implements IComponent {
 	}
 
 	private function formatLabel() {
+		if (empty($this->title)) {
+			$this->title = ucfirst($this->name);
+		}
+
 		return sprintf(self::TEMPLATES['label'],
 						($this->hideLabel ? ' class="sr-only"' : ''),
 						$this->name,

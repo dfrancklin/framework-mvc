@@ -17,6 +17,7 @@
 
 	<script src="/app/resources/js/detabinator.js"></script>
 	<script src="/app/resources/js/Menu.js"></script>
+	<script src="/app/resources/js/UploaderComponent.js"></script>
 	<script src="/app/resources/js/app.js"></script>
 
 	<?php

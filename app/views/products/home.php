@@ -5,10 +5,11 @@
 	</a>
 </h1>
 
-<table class="table table-bordered table-striped table-responsive table-hover">
+<table class="component__table table table-bordered table-striped table-responsive table-hover">
 	<thead class="thead-default">
 		<tr>
 			<th>#</th>
+			<th>Picture</th>
 			<th>Name</th>
 			<th>Price</th>
 			<th>Quantity</th>
@@ -20,6 +21,11 @@
 		<?php foreach ($products as $product): ?>
 			<tr>
 				<th scope="row"><?=$product->id?></th>
+				<td class="image-cell">
+					<?php if ($product->picture) : ?>
+						<img src="<?=$product->picture?>" alt="<?=$product->name?>" class="img-fluid rounded">
+					<?php endif; ?>
+				</td>
 				<td><?=$product->name?></td>
 				<td>$ <?=number_format($product->price, 2)?></td>
 				<td><?=$product->quantity?></td>
@@ -36,14 +42,14 @@
 	</tbody>
 </table>
 
-<?php if ($this->pages > 1) : ?>
+<?php if ($this->totalPages > 1) : ?>
 	<nav aria-label="Page navigation">
 		<ul class="pagination justify-content-center">
 			<li class="page-item<?=($this->page === 1 ? ' disabled' : '')?>">
 				<a class="page-link" href="/products?page=<?=$this->page - 1?>" tabindex="-1">Previous</a>
 			</li>
 
-			<?php foreach (range(1, $this->pages) as $value) : ?>
+			<?php foreach (range(1, $this->totalPages) as $value) : ?>
 				<li class="page-item<?=($this->page === $value ? ' active' : '')?>">
 					<a class="page-link" href="/products?page=<?=$value?>">
 						<?=$value?>
@@ -54,7 +60,7 @@
 				</li>
 			<?php endforeach; ?>
 
-			<li class="page-item<?=($this->page === $this->pages ? ' disabled' : '')?>">
+			<li class="page-item<?=($this->page === $this->totalPages ? ' disabled' : '')?>">
 				<a class="page-link" href="/products?page=<?=$this->page + 1?>">Next</a>
 			</li>
 		</ul>

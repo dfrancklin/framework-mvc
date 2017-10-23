@@ -1,10 +1,5 @@
 <h1><?=$pageTitle?></h1>
 
-<label class="custom-file">
-	<input type="file" id="file2" class="custom-file-input">
-	<span class="custom-file-control"></span>
-</label>
-
 <hr>
 
 <?php
@@ -44,9 +39,17 @@
 			'min' => 0
 		]
 	]);
+	$this->form->uploader([
+		'name' => 'picture',
+		'hideLabel' => true,
+		'width' => '1/2',
+		'accept' => 'images',
+		'value' => !is_null($this->product) ? $this->product->picture : ''
+	]);
 	$this->form->text([
 		'name' => 'description',
 		'hideLabel' => true,
+		'width' => '1/2',
 		'value' => !is_null($this->product) ? $this->product->description : ''
 	]);
 	$this->form->button([

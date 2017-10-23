@@ -9,7 +9,7 @@ class FormComponent implements IComponent {
 	const METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
 
 	const TEMPLATES = [
-		'form' => '<form class="row" action="%s" method="%s" name="%s" id="%s">%s%s</form>'
+		'form' => '<form class="row" action="%s" method="%s" name="%s" id="%s"%s>%s%s</form>'
 	];
 
 	const COMPONENTS = [
@@ -26,6 +26,8 @@ class FormComponent implements IComponent {
 	private $action;
 
 	private $method;
+
+	private $multipart;
 
 	private $name;
 
@@ -51,6 +53,10 @@ class FormComponent implements IComponent {
 			$component->{$attr} = $value;
 		}
 
+		if (get_class($component) === self::COMPONENTS['uploader']) {
+			$this->multipart = true;
+		}
+
 		if (get_class($component) === self::COMPONENTS['button']) {
 			$this->buttons[] = $component;
 		} else {
@@ -74,11 +80,18 @@ class FormComponent implements IComponent {
 			array_push($this->buttons, '</div>');
 		}
 
+		$multipart = '';
+
+		if ($this->multipart) {
+			$multipart = ' enctype="multipart/form-data"';
+		}
+
 		$form = sprintf(self::TEMPLATES['form'],
 						$this->action,
 						$this->method,
 						$this->name,
 						$this->id,
+						$multipart,
 						implode('', $this->children),
 						implode('', $this->buttons));
 

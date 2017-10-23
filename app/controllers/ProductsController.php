@@ -30,12 +30,13 @@ class ProductsController {
 	}
 
 	public function products() {
-		$quantity = 10;
+		$quantity = 9;
 		$page = $_GET['page'] ?? 1;
 		$offset = ($page - 1) * $quantity;
 		$products = $this->service->page($offset, $quantity);
+		$totalPages = $this->service->totalPages($quantity);
 
-		if (empty($products) && $page != 1) {
+		if ($page > $totalPages) {
 			Router::redirect('/products');
 		}
 
@@ -43,7 +44,7 @@ class ProductsController {
 		$view->pageTitle = 'Products';
 		$view->products = $products;
 		$view->page = (int) $page;
-		$view->pages = $this->service->totalPages($quantity);
+		$view->totalPages = $totalPages;
 
 		return $view->render('products/home');
 	}
@@ -73,7 +74,7 @@ class ProductsController {
 	 * @RequestMethod POST
 	 */
 	public function save() {
-		$product = $this->createProduct($_POST);
+		$product = $this->createProduct();
 		$product = $this->service->save($product);
 
 		if ($product) {
@@ -109,19 +110,32 @@ class ProductsController {
 		return $view->render('products/form');
 	}
 
-	private function createProduct(array $info) : Product {
-		$properties = ['id', 'name', 'description', 'picture', 'price', 'quantity'];
+	private function createProduct() : Product {
+		$properties = ['id', 'name', 'description', 'price', 'quantity'];
 		$product = new Product;
 
 		foreach ($properties as $property) {
-			if (isset($info[$property])) {
-				if (is_numeric($info[$property])) {
-					$product->{$property} = $info[$property] + 0;
+			if (isset($_POST[$property])) {
+				if (is_numeric($_POST[$property])) {
+					$product->{$property} = $_POST[$property] + 0;
 				} else {
-					$product->{$property} = $info[$property];
+					$product->{$property} = $_POST[$property];
 				}
 			}
 		}
+
+		$picture = '';
+
+		if (isset($_FILES['picture']) && !$_FILES['picture']['error']) {
+			$mime = $_FILES['picture']['type'];
+			$file = file_get_contents($_FILES['picture']['tmp_name']);
+			$picture = sprintf('data:%s;base64,%s', $mime, base64_encode($file));
+		} else if ($product->id) {
+			$old = $this->service->byId($product->id);
+			$picture = $old->picture;
+		}
+
+		$product->picture = $picture;
 
 		return $product;
 	}
